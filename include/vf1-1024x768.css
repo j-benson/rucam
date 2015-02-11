@@ -7,24 +7,25 @@ body
 	
 #main_div
 	{
-		position: absolute;
-		top: 2;
-		left: 0;
-		right: 0;
-		bottom: 2;
-		width: 994px;
-		margin: 1px auto;
-		border: 2px solid #FFFFFF;	/* white */
-		background-color: #DDDDDD;    /*   999999 dark grey    */
-		padding: 3px; 
-		
-		/* height: 100%; */
-		max-height: 565;
-		/* max-height:600px; */
+	position: absolute;
+	top: 4px;
+    text-align: left;
+	left: 10px;
+	right: 0;
+	bottom: 2;
+	width: 994px;
+	margin: 1px auto;
+	border: 2px solid #DEEFD8;	/* white */
+	background-color: #999999;    /*   999999 dark grey    */
+	padding: 3px;
+	/* height: 100%; */
+    height: 100%;
+
+	/* max-height:600px; */
 		/* overflow: hidden; */
-		background: #EEEEDD;
-		z-index:-2; 
-		overflow: auto;
+	background: #DEEFD8;
+	z-index: -2;
+	overflow: auto;
 	}
 	
 div
@@ -77,10 +78,10 @@ div
 		top: 0; 
 		position: relative; 
 		width:100%;
-		background: #AACCEE;
+		background: #DDD;
 		overflow: auto; 
 		min-height: 200; 
-		height: 432;
+		height: 25;
 		border-bottom: solid #111 1px;
 	}
 
@@ -117,49 +118,32 @@ div
 
 	}
 
-#bottom_div
-	{
-		/* clear:both; */ 
-		/* position: absolute; */
-		bottom: 0px;
-		/* width: 993; */
-		width: 100%;
-		min-width: 900;
-		margin: 0px auto;
-		border: 0px solid #FFFFFF;	/* white */
-		background-color: #DDDDDD;    /*   999999 dark grey    */
-		background: url('images/vf1_bg.png');
-		padding: 0px; 
-		height: 59;
-		z-index:0;
-		
-		/*height: 8%; */
-	}
+
 
 .div_image
 	{
-		width: 400px;      /*  360  */ 
-		height: 300px;     /*   260  */
-		float: left; 
-		left: 10px;
-		text-align: center; 
-		border: 1px solid #777; 
-		margin: 5px 5px 5px 5px;
+	alignment: left;
+	float: left;
+	Left: 0.5;
+	Top: -1.5;
+	text-align: center;
+	border: 1px solid #777;
+	margin: 5px 5px 5px 5px;
 	}
 
 .div_image img
 	{
-		width: 380px;
-		height: 275px;
+		width: 38px;
+		height: 25px;
 		padding: 2px; 
 		border: 0px; 
-		margin: 0px auto; 
+		margin: 0px auto;
 	}
 	
 .div_image .caption
 	{ 
 		padding: .2em;
-		background: #eee; 
+     	background: #eee;
 		border-top: 1px solid #555; 
 		display: block;
 		font-family: Courier;
@@ -167,17 +151,22 @@ div
 		font-size: 12px;
 	}
 	
+h1
+{
+	
+	}
 h2
 	{
 		vertical-align: bottom;
 		font-family: Arial;
 		font-size:16pt;
-		background: #EEEEDD;	/* 9955FF purple */
-		background: #535353;	/* 9955FF purple */
+/*		background: #EEEEDD;	 9955FF purple */
+		background: #A9E789;	/* 9955FF purple */
 		padding: 3px 3px 3px 3px;
 		margin: 0px 0px 0px 0px; 
-		border: 3px solid #FFFF55;	/* yellow */
-		color: yellow;
+/*		border: 3px solid #FFFF55;	yellow */
+		color: #FFF;
+		font-family:Tahoma, Geneva, sans-serif;
 	}
 	
 p
@@ -189,17 +178,18 @@ p
 	
 	}
 	
-a:link {color:#116666}      /* unvisited link */
-a:visited {color:#116666}  /* visited link */
-a:hover {color:#FF6666}  /* mouse over link */
-a:active {color:#116666}  /* selected link */
+a:link {color:#FFF}      /* unvisited link */
+a:link{text-decoration:none}
+a:visited {color:#000}  /* visited link */
+a:hover {color:#4BBC5C}  /* mouse over link */
+a:active {color:#000}  /* selected link */
 
 ul {
 	position:relative;
 	left:0;
 	/* top:1.5em;  */
 	float:left; 
-	background:#ddd;
+	background:#DEEFD8;
 	width:100%;
 	margin:0;
 	padding:0;
@@ -216,24 +206,25 @@ li{
 	background: #FEFEFE;
 	font-size: 12pt;
 	font-weight: bold;
+	font-family: Tahoma, Geneva, sans-serif;
 }
 
  .this_page
 	{
 		font-size: 14pt;
-		background: #EEEEDD; 
-		color: #6666DD;		
+		background: #CBCBCB; 
+		color: #FFF;		
 	}
 
 
 .p1
 	{
 		clear: both;
-		font-family: Arial;
+		font-family:Tahoma, Geneva, sans-serif;
 		font-size:12pt;	
 		font-weight: bold;
-		color: #6666DD;		/* yellow */
-		background: #EEEEDD;     /* DDDDAA: light gold; 999999: dark grey  */
+		color: #FFF;		/* yellow */
+		background: #CBCBCB;     /* DDDDAA: light gold; 999999: dark grey  */
 	}
 
 .p2
