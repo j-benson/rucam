@@ -1,5 +1,5 @@
 <?
-	
+	// Hello Benson
 	// The application title is defined here 
 	$application_title = "RUCAM System";
 	
