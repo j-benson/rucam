@@ -1,6 +1,7 @@
 <?
  $class_obj=$_REQUEST['class_obj'];
 	
+	// pino holds the data sent by the user form, which is later added to the database.
 	$pino = array();	// this is a local array used to store retrieved attributes of selected objects
 	
 	// Posted values array ("address" => "hatield")
@@ -15,7 +16,7 @@
 		}
 	}
 
-	// -- Logic for individual classes
+	// -- Logic for individual classes creation
 	if ($class_obj == "fixtures") {
 
 	}
@@ -29,7 +30,7 @@
 
 	}
 	if ($class_obj == "authorisation") {
-		$pino['cards_id']
+		//$pino['cards_id']
 	}
 	// -- End Logic for individual classes.
 

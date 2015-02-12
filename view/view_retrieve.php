@@ -4,11 +4,16 @@
 	echo "<p class='p1'>SEARCH </p>";
 	echo "<table class=table1><form action=".$current_file_name."?here=".$here."&mode=confirm_search&class_obj=".$class_obj." method=post>";
 	
+	// $w_columns contains the table columns and values for table name class_obj ie competitor whatever the value of here is.
+	// accessable by $w_columns['tablecolumn'] = columnvalue;
+	// $wcolumns_key is the db field name
+	// $wcolumns_value is the value in the db
 	$w_columns = MyActiveRecord::Columns($class_obj);
 	foreach($w_columns as $wcolumns_key => $wcolumns_value)
 	{
 		if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 		{
+			// For date data types show date picker button 
 			echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
 			echo "<td><input type=button value='Set Date' onclick=displayDatePicker('input_".$wcolumns_key."',false,'ymd','-'); >";
 				
@@ -19,7 +24,7 @@
 		{
 			//echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value=''>";
 			echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
-			if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
+			if (strlen($wcolumns_key) > 2 && !(strpos($wcolumns_key,"_id")===false))
 			{
 				//$related_class = substr($wcolumns_key, 0, -3);
 				$related_class = find_relatedclass($wcolumns_key,$foreign_keys);
@@ -58,6 +63,7 @@
 			
 		}
 	}
+	
 	
 	foreach ($join_tables as $jt_key => $jt_value)
 	{

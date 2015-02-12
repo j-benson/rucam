@@ -8,10 +8,10 @@
 
 <?
 
-	if (($mode != "confirm_update") && ($mode != "confirm_create")) 
-	{
-		include "controller/controller_retrieve.php";
-	}
+			if (($mode != "confirm_update") && ($mode != "confirm_create")) 
+			{
+				include "controller/controller_retrieve.php";
+			}
 ?>
 
 </div>
@@ -103,6 +103,4 @@ if ($mode == "search" || $mode == "create" || $mode == "update")
 		
 	}	// end foreach ($classes as $class_key => $class_value)
 ?>
-
-<div id=bottom_div><img  src="include/images/vf1_logo.png" class="img_vf1"><p class="licence_disclaimer"><b>This program has been developed by using <a href="http://homepages.stca.herts.ac.uk/~comqvv/vf1">VF1</a>, possibly the simplest open-source free PHP development framework in the world! :-) You can redistribute VF1 and/or modify it under the terms of the <a href="http://www.gnu.org/licenses/gpl.html">GNU General Public License</a> as published by the Free Software Foundation. VF1 is distributed in the hope that it will be useful, but comes WITHOUT ANY WARRANTY. See the GNU General Public License for more details.</b>
 </div>

@@ -37,7 +37,8 @@
 	include "controller/controller.php";
 	//include "model/model.php";
 	
-	
+	// Takes $pino which is the column name in a db table sees if it is in the foreign keys array.
+	// returns the class name $pino is a forgien key of.
 	function find_relatedclass($pino,$gino)
 	{
 		if(in_array($pino,$gino))
