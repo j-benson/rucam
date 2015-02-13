@@ -13,6 +13,4 @@
 // determines main page depending on $here and $mode
 
 	include "./view/main_page.php";
-	
-	
 ?>

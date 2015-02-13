@@ -80,8 +80,7 @@ div
 		width:100%;
 		background: #DDD;
 		overflow: auto; 
-		min-height: 200; 
-		height: 25;
+		min-height: 200;
 		border-bottom: solid #111 1px;
 	}
 
@@ -198,8 +197,7 @@ ul {
 }
 
 li{
-	padding: 4px 10px 4px 10px;
-	text-align: center;
+	padding: 4px 4px 4px 4px;
 	min-width: 100px;
 	float:left;
 	display:block;

@@ -13,7 +13,7 @@
 	}
 	else if ($here != "")
 	{
-		echo "<li ><a href=". $current_file_name.">Main page</a></li>";
+		echo "<li ><a href=". $current_file_name.">Main Page</a></li>";
 		foreach ($classes as $class_key => $class_value)
 		{
 			if ($class_value != $here)
@@ -30,12 +30,3 @@
 ?>
 </ul>
 <!--</div>-->
-<?
-
-//	if ($here == "")
-	{
-?>
-
-<?
-	}
-?>

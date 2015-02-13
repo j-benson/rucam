@@ -7,7 +7,7 @@
 			{
 ?>
 
-<div id="div2" class=div_mainpage>
+				<div id="div2" class="div_mainpage">
 
 <? 
 
@@ -15,24 +15,20 @@
 
 				if ($mode == "" || $mode == "confirm_update")
 				{
-					echo "<p class='p1'>".$class_value.": <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>create new ".$class_value."</a> ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>search ".$class_value."</a> ¦ Help</p>";
+					echo "<p class='p1'>".ucfirst($class_value).": <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>Create New ".ucfirst($class_value)."</a> ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>Search ".ucfirst($class_value)."</a> ¦ Help</p>";
 				}
 				else if ($mode == "create" || $mode == "confirm_create" )
 				{
-					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".$class_value."</a>: create new ".$class_value." ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>search ".$class_value."</a> ¦ Help</p>";
+					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".ucfirst($class_value)."</a>: Create New ".ucfirst($class_value)." ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>Search ".ucfirst($class_value)."</a> ¦ Help</p>";
 				}
 				else if ($mode == "search" || $mode == "confirm_search")
 				{
-					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".$class_value."</a>: <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>create new ".$class_value."</a> ¦ search ".$class_value." ¦ Help</p>";
+					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".ucfirst($class_value)."</a>: <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>Create New ".ucfirst($class_value)."</a> ¦ Search ".ucfirst($class_value)." ¦ Help</p>";
 				}
 				else if ($mode == "update")
 				{
-					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".$class_value."</a>: <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>create new ".$class_value."</a> ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>search ".$class_value."</a> ¦ Help</p>";
+					echo "<p class='p1'><a href='". $current_file_name."?here=".$class_value."&class_obj=".$class_value."'>".ucfirst($class_value)."</a>: <a href='". $current_file_name."?here=".$class_value."&mode=create&class_obj=".$class_value."'>Create New ".ucfirst($class_value)."</a> ¦ <a href='". $current_file_name."?here=".$class_value."&mode=search&class_obj=".$class_value."'>Search ".ucfirst($class_value)."</a> ¦ Help</p>";
 				}
 			}
 		}
-	
-
-	
-	
-?>	
+?>

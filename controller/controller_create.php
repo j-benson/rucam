@@ -1,10 +1,9 @@
 <?
  $class_obj=$_REQUEST['class_obj'];
 	
-	// pino holds the data sent by the user form, which is later added to the database.
+	// $pino holds the data sent by the user form, which is later added to the database.
 	$pino = array();	// this is a local array used to store retrieved attributes of selected objects
 	
-	// Posted values array ("address" => "hatield")
 	foreach ($_REQUEST as $key_REQUEST => $value_REQUEST)
 	{
 		if (substr($key_REQUEST,0,6) == 'input_')
@@ -44,14 +43,16 @@
    
    $last_inserted_record = $this_obj->id;
    
+   
+
+
+   // Dealing with the join tables
    $relation_name = $_REQUEST['jt_name'];
    $relation_class = $_REQUEST['jt_class'];
-   
-   
+      
   // echo "<p>relation_name = ".$relation_name." - strpos = ".strpos ($relation_name,$class_obj)."";
-  
- 
-   echo "<p>";
+   
+   echo "<p>"; // What is this?
    
    foreach ($_REQUEST as $key_REQUEST => $value_REQUEST)
 	{
@@ -76,7 +77,6 @@
 					$obj2 = MyActiveRecord::FindById($relation_class, $that_id);
 					//$obj2 = $that_id;
 				}
-				//MyActiveRecord::Link($obj1,$obj2);
 				MyActiveRecord::Link($obj1,$obj2);
 				//echo "rel_name = ".$relation_name." - class = ".$class_obj." pos = ".strpos($relation_name,$class_obj)." obj1 = ".$obj1->id." - obj2 = ".$obj2->id."; ";
 		}
