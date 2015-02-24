@@ -78,10 +78,9 @@ div
 		top: 0; 
 		position: relative; 
 		width:100%;
-		overflow: auto; 
-/*		min-height: 200; */
-		height: 800;
 		background:#DEEFD8;
+		min-height: 200;
+		border-bottom: solid #111 1px;
 	}
 
 #div3

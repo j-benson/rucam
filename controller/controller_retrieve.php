@@ -15,6 +15,7 @@
 	{
 		if (in_array($class_attribute,$foreign_keys))
 		{
+			// $class_attribute is a foreign key.
 			foreach ($foreign_keys as $fk_key => $fk_value)
 			{
 				if ($class_attribute == $fk_value)
@@ -26,7 +27,8 @@
 		}
 		else
 		{
-			echo "<th>".$class_attribute;
+			// Is not a foreign key.
+			echo "<th>".niceName($class_value, $class_attribute)."</th>";
 		}
 	}
 	

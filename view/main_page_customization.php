@@ -1,12 +1,12 @@
 <?
-	if ($here == "")
-		{
+	if ($here == "") {
 ?>
 <div id="div2" class=div_mainpage>
 	<p class="p1">Welcome to the <? echo $application_title; ?> </p>
 	<div id="div5" class=div_mainpage>
     <img src="./include/images/Logo RUCAM.png">
     </div>
+
 
 <p>
   <?
