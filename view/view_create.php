@@ -4,6 +4,7 @@
 	$class_obj=$_REQUEST['class_obj'];
 	
 	echo "<p class='p1'>Create New ".singularName($class_obj, true)."</p>";
+
 	if (isset($_REQUEST['post_create']))
 	{
 		post_create_message($_REQUEST['post_create'],$class_obj);
@@ -179,7 +180,7 @@
 		}
 	}
 	
-	
+
 	echo "<tr><td><td><input type=button value='Create New ".singularName($here, true)."' onClick=javascript:confirm_create('form_create');><td><input type=reset >";
 	echo "</table></form>";
 	
