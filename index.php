@@ -13,7 +13,7 @@
 
 <body>
 <div id="main_div">
-<h2><? echo $application_title; ?></h2>
+<h2><img src="./include/images/Logo RUCAM - Small - 2.png"><? echo $application_title; ?></h2>
 <?php
 	function ReturnName()
 	{
