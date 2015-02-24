@@ -1,5 +1,4 @@
 <?
-	// Hello Benson
 	// The application title is defined here 
 	$application_title = "RUCAM System";
 	
@@ -26,48 +25,84 @@
 	{
 		if ($class_name == 'competitors' && $foreign_key == 'titles_id')
 		{
-			return "title";
+			return "Title";
 		}
 		else if ($class_name == 'competitors' && $foreign_key == 'teams_id')
 		{
-			return "team";
+			return "Team";
 		}
 		else if ($class_name == 'cards' && $foreign_key == 'competitors_id')
 		{
-			return "competitor";
+			return "Competitor";
 		}
 		else if ($class_name == 'cards' && $foreign_key == 'cardstatus_id')
 		{
-			return "status";
+			return "Status";
 		}
 		else if ($class_name == 'fixtures' && $foreign_key == 'home_teams_id')
 		{
-			return "home team";
+			return "Home Team";
 		}
 		else if ($class_name == 'fixtures' && $foreign_key == 'away_teams_id')
 		{
-			return "away team";
+			return "Away Team";
 		}
 		else if ($class_name == 'fixtures' && $foreign_key == 'venues_id')
 		{
-			return "venue";
+			return "Venue";
 		}
 		else if ($class_name == 'authorisation' && $foreign_key == 'cards_id')
 		{
-			return "card";
+			return "Card";
 		}
 		else if ($class_name == 'authorisation' && $foreign_key == 'fixtures_id')
 		{
-			return "fixture";
+			return "Fixture";
 		}
 		else if ($class_name == 'entries' && $foreign_key == 'cards_id')
 		{
-			return "card";
+			return "Card";
 		}
 		else if ($class_name == 'entries' && $foreign_key == 'venues_id')
 		{
-			return "venue";
+			return "Venue";
+		} 
+	}
+
+	// For displaying to the user only, define better names for each field or at least capitalise the words.
+	function niceName($class_name, $field) {
+		if (strlen($field) > 2 && !(strpos($field, '_id')===false))
+		{
+			// Is a foreign key so resolve with
+			return name_child_relationship($class_name,$field);
 		}
+
+		// Not a foreign key so replace given field names with nicer names to display to the user.
+		// If nothing has been defined just make sure the first letter is capitalised.
+		switch ($field) {
+			case "id":
+				return "ID";
+			case "controlledby":
+				return "Controlled By";
+			case "referred_as":
+				if ($class_name == "teams") return "Nation";
+			default:
+				return ucfirst($field);
+		}
+	}
+
+	// Remove the S from a word, if does not end in an s return the word back.
+	function singularName($name, $ucfirst = false) 
+	{
+		// if ends in an s
+		if (strlen($name) > 3 && strrpos(strtolower($name), "s") === strlen($name) - 1)
+		{
+			$name = substr($name, 0, -1);
+		}
+		if ($ucfirst) {
+			$name = ucfirst($name);
+		}
+		return $name;
 	}
 	
 	// this array has been initiated, but its usage will be defined in future versions of VF1

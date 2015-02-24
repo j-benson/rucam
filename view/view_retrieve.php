@@ -13,8 +13,8 @@
 	{
 		if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 		{
-			// For date data types show date picker button 
-			echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
+			// For date data types show date picker button
+			echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
 			echo "<td><input type=button value='Set Date' onclick=displayDatePicker('input_".$wcolumns_key."',false,'ymd','-'); >";
 				
 				//echo "<tr id='arow'><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'>";
@@ -22,8 +22,9 @@
 		}
 		else
 		{
-			//echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value=''>";
-			echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
+			echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."'>";
+			
+			// If the column is a foreign key add dropdown box.
 			if (strlen($wcolumns_key) > 2 && !(strpos($wcolumns_key,"_id")===false))
 			{
 				//$related_class = substr($wcolumns_key, 0, -3);
