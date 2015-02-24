@@ -2,10 +2,10 @@
 
 	$class_obj_id=$_REQUEST['class_obj_id'];
 	
-	$class_obj = MyActiveRecord::FindById($here,$class_obj_id);
+	$class_obj = MyActiveRecord::FindById($here, $class_obj_id);
 
 	
-	echo "<p class=p1>UPDATE ".$here."</p>";
+	echo "<p class=p1>Update ".singularName($here, true)."</p>";
 	
 	if (isset($_REQUEST['post_update']))
 	{
@@ -20,14 +20,13 @@
 	{
 		if ($wcolumns_key == "id")
 		{
-			echo "<tr><td>".$wcolumns_key."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' readonly=true>";
+			echo "<tr><td>".strtoupper($wcolumns_key)."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' readonly=true>";
 		}
-		
 		else
 		{
 			if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 			{
-				echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'>";
+				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'></td>";
 				echo "<td><input type=button value='Set Date' onclick=displayDatePicker('input_".$wcolumns_key."',false,'ymd','-'); >";
 				
 				//echo "<tr id='arow'><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'>";
@@ -39,7 +38,7 @@
 			{
 				//$related_class = substr($wcolumns_key, 0, -3);
 				$related_class = find_relatedclass($wcolumns_key,$foreign_keys);
-				echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'><td><select id='select_".$wcolumns_key."' onChange=javascript:change_obj('".$wcolumns_key."')>";
+				echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'><td><select id='select_".$wcolumns_key."' onChange=javascript:change_obj('".$wcolumns_key."')>";
 				
 				foreach ($obj_class = MyActiveRecord::FindBySql($related_class, 'SELECT * FROM '.$related_class.' WHERE id > -1 ORDER BY referred_as') as $obj_attribute => $obj_attr_value)
 				{
@@ -80,7 +79,7 @@
 			}
 			else
 			{
-				echo "<tr><td>".$wcolumns_key."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'>";
+				echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'>";
 			}
 		}
 	}
@@ -103,6 +102,6 @@
 		}
 	}
 	
-	echo "<tr><td><td><input type=button value='Update this ".$here."' onClick=javascript:confirm_update('update_".$here."')><td><input type=reset></table></form>";
+	echo "<tr><td><td><input type=button value='Update ".singularName($here, true)."' onClick=javascript:confirm_update('update_".$here."')><td><input type=reset></table></form>";
 	
 ?>
