@@ -1,4 +1,4 @@
-<!--<div id=div_menu>-->
+<div id="div_menu">
 <ul>
 <?
 // let's create a context sensitive main menu
@@ -29,4 +29,4 @@
 	
 ?>
 </ul>
-<!--</div>-->
+</div>

@@ -178,32 +178,21 @@ p
 	
 	}
 	
-a:link {
-	color:#009;
-	text-decoration:none;
-}
+/*a:link {color:#000099, text-decoration:none}      /* unvisited link */
+a:link {color:#009, text-decoration:none}      /* unvisited link */
 a:visited {color:#000}  /* visited link */
 a:hover {color:#4BBC5C}  /* mouse over link */
 a:active {color:#000}  /* selected link */
 
 #div_menu a,
-#div_menu a:active,
+#div_menu a:link {color:#009}
+#div_menu a:active
 #div_menu a:visited {
-	color:#000;
+	color:#000
 }
 
 #div_menu a:hover {
-	color: #4BBC5C;
-}
-
-.p1 a,
-.p1 a:active,
-.p1 a:visited {
-	color:#000;
-}
-
-.p1 a:hover {
-	color: #4BBC5C;
+	color: #4BBC5C
 }
 
 
@@ -249,7 +238,7 @@ li{
 		font-family:Tahoma, Geneva, sans-serif;
 		font-size:12pt;	
 		font-weight: bold;
-
+		color: #009;		/* yellow */
 /*		color:#FFF*/
 		background: #CBCBCB;     /* DDDDAA: light gold; 999999: dark grey  */
 	}
