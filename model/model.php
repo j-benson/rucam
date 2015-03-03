@@ -10,10 +10,10 @@
 	include './include/MyActiveRecord.0.4.php';
 	
 	//in this array we list all and only those classes we like to CRUD manage from the main menu 
-	$classes = array('fixtures','teams','competitors','cards','authorisation');  
+	$classes = array('teams','fixtures','competitors','cards','authorisation');  
 	
 	// in this array we list all join tables which hold many to many relationships between two given classes of objects
-	$join_tables = array('authorisation');	
+	$join_tables = array();	
 	
 	// in this array below we list all foreign keys: this array MUST EXIST: if empty then uncomment line below (and comment the following one!)
 	//foreign_keys=array();
@@ -26,6 +26,10 @@
 		if ($class_name == 'competitors' && $foreign_key == 'titles_id')
 		{
 			return "Title";
+		}
+		else if ($class_name == 'competitors' && $foreign_key == 'referred_as')
+		{
+			return "Name";
 		}
 		else if ($class_name == 'competitors' && $foreign_key == 'teams_id')
 		{
@@ -85,6 +89,7 @@
 			case "controlledby":
 				return "Controlled By";
 			case "referred_as":
+				if ($class_name == "competitors") return "Name";
 				if ($class_name == "teams") return "Nation";
 			default:
 				return ucfirst($field);
@@ -104,7 +109,36 @@
 		}
 		return $name;
 	}
-	
+
+	/** NAHH
+	 * Used when displaying the data in the tables. When a foreign key links to a table that does not have
+	 * a 'referred_as' field because it contains anther foreign key. This function maps which foreign key to use
+	 * that referres to a table with a 'referred_as' field and so what data to show to the user.
+	 * @param $relatedClass The name of the class that does not have a referred as field that was retured by the 
+	 * 					    find_relatedclass function.
+	 * @return The name of the foreign key to get the data from. Return null if there is no redirect match.
+	 */
+	function foreignKeyRedirect($relatedClass) {
+		if ($here == "authorisation" && $relatedClass == "cards") {
+			return "competitors_id";
+		} else {
+			return null;
+		}
+	}
+
+	/**
+	 * Whether the refered_as field in a perticular table/class should be hidden from the user or not.
+	 * @param $class The name of the class or table to check if the referred_as field should be hidden.
+	 * @return True when the referred_as field should ne hidden and false if it should be shown.
+	 */
+	function hiddenReferredAs($class) {
+		if ($class == "fixtures") return true;
+		if ($class == "cards") return true;
+
+		return false;
+	}
+
+
 	// this array has been initiated, but its usage will be defined in future versions of VF1
 	$objects = array();
 	

@@ -16,91 +16,18 @@
 
 	// Columns returns an array with the field name as the index and for each field the value is an array containing
 	// information about the field.
-	// Columns for competitors looks like this.
-// array(5) {
-//   ["id"]=>
-//   array(6) {
-//     ["Field"]=>
-//     string(2) "id"
-//     ["Type"]=>
-//     string(7) "int(11)"
-//     ["Null"]=>
-//     string(2) "NO"
-//     ["Key"]=>
-//     string(3) "PRI"
-//     ["Default"]=>
-//     NULL
-//     ["Extra"]=>
-//     string(14) "auto_increment"
-//   }
-//   ["titles_id"]=>
-//   array(6) {
-//     ["Field"]=>
-//     string(9) "titles_id"
-//     ["Type"]=>
-//     string(7) "int(11)"
-//     ["Null"]=>
-//     string(2) "NO"
-//     ["Key"]=>
-//     string(0) ""
-//     ["Default"]=>
-//     NULL
-//     ["Extra"]=>
-//     string(0) ""
-//   }
-//   ["name"]=>
-//   array(6) {
-//     ["Field"]=>
-//     string(4) "name"
-//     ["Type"]=>
-//     string(12) "varchar(150)"
-//     ["Null"]=>
-//     string(2) "NO"
-//     ["Key"]=>
-//     string(0) ""
-//     ["Default"]=>
-//     NULL
-//     ["Extra"]=>
-//     string(0) ""
-//   }
-//   ["role"]=>
-//   array(6) {
-//     ["Field"]=>
-//     string(4) "role"
-//     ["Type"]=>
-//     string(12) "varchar(100)"
-//     ["Null"]=>
-//     string(2) "NO"
-//     ["Key"]=>
-//     string(0) ""
-//     ["Default"]=>
-//     NULL
-//     ["Extra"]=>
-//     string(0) ""
-//   }
-//   ["teams_id"]=>
-//   array(6) {
-//     ["Field"]=>
-//     string(8) "teams_id"
-//     ["Type"]=>
-//     string(7) "int(11)"
-//     ["Null"]=>
-//     string(2) "NO"
-//     ["Key"]=>
-//     string(0) ""
-//     ["Default"]=>
-//     NULL
-//     ["Extra"]=>
-//     string(0) ""
-//   }
-// }
-
 	$w_columns = MyActiveRecord::Columns($class_obj);
 	//echo "<pre>"; var_dump($w_columns); echo "</pre>";
 
+	// Foreach of the columns in the table for the selected class
 	foreach($w_columns as $wcolumns_key => $wcolumns_value)
 	{
 		//echo "<p>" . $wcolumns_key . "</p>";
+
+		// Check for and ignore hidden referred_as columns
+		if ($wcolumns_key == "referred_as" && hiddenReferredAs($class_value)) {
+			continue;
+		}
 
 		if ($wcolumns_key != "id")
 		{
@@ -111,11 +38,9 @@
 			}
 			else
 			{
-			
 				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' /></td>";
 				
-				// Where the field name is greater than 2 ie not 'id' and the field name contains '_id' so 
-				// this statement if true for foreign key fields.
+				// FOREIGN KEY LINKS - creates dropdown boxes for fk referred_as column
 				if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
 				{
 					//echo "</p>" . $wcolumns_key . " is a foreign key.</p>";
@@ -135,26 +60,28 @@
 						
 					//echo "(".$wcolumns_key.")";
 						
-						// True when $wcolumns_key has more than length 2 and contains '_id' so for foreign keys
-						if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
-						{
-							$related_superclass = find_relatedclass($wcolumns_key,$foreign_keys);
-							foreach ($super_obj = MyActiveRecord::Columns($related_superclass) as $super_obj_attribute => $super_obj_value)
-							{
-								if (strlen($super_obj_attribute)> 2 && !(strpos($super_obj_attribute,"_id")===false))
-								{
-									//$related_supersuperclass = substr($super_obj_attribute, 0, -3);
-									$related_supersuperclass = find_relatedclass($super_obj_attribute,$foreign_keys);
+						// Adds other related infomation about foreign key links in the dropdown box only appears on the auth page it seems
+						// Turned it off as using hidden referred as to show this infomation and that duplicates the information
+						// if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
+						// {
+						// 	$related_superclass = find_relatedclass($wcolumns_key,$foreign_keys);
+						// 	foreach ($super_obj = MyActiveRecord::Columns($related_superclass) as $super_obj_attribute => $super_obj_value)
+						// 	{
+						// 		if (strlen($super_obj_attribute)> 2 && !(strpos($super_obj_attribute,"_id")===false))
+						// 		{
+						// 			//$related_supersuperclass = substr($super_obj_attribute, 0, -3);
+						// 			$related_supersuperclass = find_relatedclass($super_obj_attribute,$foreign_keys);
 									
-									//$related_superobj = $obj_attr_value->find_parent($related_supersuperclass)->referred_as;
-									$related_superobj = $obj_attr_value->find_parent($related_supersuperclass,$super_obj_attribute)->referred_as;
-									//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
+						// 			//$related_superobj = $obj_attr_value->find_parent($related_supersuperclass)->referred_as;
+						// 			$related_superobj = $obj_attr_value->find_parent($related_supersuperclass,$super_obj_attribute)->referred_as;
+						// 			//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
 									
 									
-									echo " (".$related_superobj.")";
-								}
-							}
-						}
+						// 			echo " (".$related_superobj.")";
+						// 		}
+						// 	}
+						// }
+						/////////////////////
 					}
 					echo "</select ></td>";
 				}

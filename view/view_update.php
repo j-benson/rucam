@@ -18,6 +18,11 @@
 	$w_columns = MyActiveRecord::Columns($class_obj);
 	foreach($w_columns as $wcolumns_key => $wcolumns_value)
 	{
+		// Check for and ignore hidden referred_as columns
+		if ($wcolumns_key == "referred_as" && hiddenReferredAs($class_value)) {
+			continue;
+		}		
+
 		if ($wcolumns_key == "id")
 		{
 			echo "<tr><td>".strtoupper($wcolumns_key)."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' readonly=true>";
@@ -54,26 +59,29 @@
 					
 					//echo "(".$wcolumns_key.")";
 					
-					if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
-					{
-						//$related_superclass = substr($wcolumns_key, 0, -3);
-						$related_superclass = find_relatedclass($wcolumns_key,$foreign_keys);
-						foreach ($super_obj = MyActiveRecord::Columns($related_superclass) as $super_obj_attribute => $super_obj_value)
-						{
-							if (strlen($super_obj_attribute)> 2 && !(strpos($super_obj_attribute,"_id")===false))
-							{
-								//$related_supersuperclass = substr($super_obj_attribute, 0, -3);
-								$related_supersuperclass = find_relatedclass($super_obj_attribute,$foreign_keys);
+					// Adds other related infomation about foreign key links in the dropdown box only appears on the auth page it seems
+					// Turned it off as using hidden referred as to show this infomation and that duplicates the information
+					// if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
+					// {
+					// 	//$related_superclass = substr($wcolumns_key, 0, -3);
+					// 	$related_superclass = find_relatedclass($wcolumns_key,$foreign_keys);
+					// 	foreach ($super_obj = MyActiveRecord::Columns($related_superclass) as $super_obj_attribute => $super_obj_value)
+					// 	{
+					// 		if (strlen($super_obj_attribute)> 2 && !(strpos($super_obj_attribute,"_id")===false))
+					// 		{
+					// 			//$related_supersuperclass = substr($super_obj_attribute, 0, -3);
+					// 			$related_supersuperclass = find_relatedclass($super_obj_attribute,$foreign_keys);
 								
-								//$related_superobj = $obj_attr_value->find_parent($related_supersuperclass)->referred_as;
-								$related_superobj = $obj_attr_value->find_parent($related_supersuperclass,$super_obj_attribute)->referred_as;
+					// 			//$related_superobj = $obj_attr_value->find_parent($related_supersuperclass)->referred_as;
+					// 			$related_superobj = $obj_attr_value->find_parent($related_supersuperclass,$super_obj_attribute)->referred_as;
 								
-								//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
+					// 			//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
 								
-								echo " (".$related_superobj.")";
-							}
-						}
-					}
+					// 			echo " (".$related_superobj.")";
+					// 		}
+					// 	}
+					// }
+					/////////////////////////
 				}
 				echo "</select>";
 			}

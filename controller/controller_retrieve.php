@@ -7,161 +7,175 @@
 	if ($mode != "confirm_search") 
 	{
 ?>	
-	<table class=table1>
+	<table class="table1">
 		<tr>
 <?
-
-	foreach (MyActiveRecord::Columns($class_value) as $class_attribute => $class_attr_value)
-	{
-		if (in_array($class_attribute,$foreign_keys))
-		{
-			// $class_attribute is a foreign key.
-			foreach ($foreign_keys as $fk_key => $fk_value)
+			// Build the table headers.
+			foreach (MyActiveRecord::Columns($class_value) as $class_attribute => $class_attr_value)
 			{
-				if ($class_attribute == $fk_value)
+				// If the column is the referred as columns check if it can be shown.
+				if ($class_attribute == "referred_as" && hiddenReferredAs($class_value)) {
+					continue;
+				}
+
+				if (in_array($class_attribute,$foreign_keys))
 				{
-					echo "<th><!--class_attribute=".$class_attribute." fk_key=".$fk_key." -->".name_child_relationship($class_value,$fk_value);
+					// $class_attribute is a foreign key.
+					foreach ($foreign_keys as $fk_key => $fk_value)
+					{
+						if ($class_attribute == $fk_value)
+						{
+							echo "<th><!--class_attribute=".$class_attribute." fk_key=".$fk_key." -->".name_child_relationship($class_value,$fk_value);
+						}
+					}
+				}
+				else
+				{
+					// Is not a foreign key.
+					echo "<th>".niceName($class_value, $class_attribute)."</th>";
 				}
 			}
-			//echo "<th>owned by";
-		}
-		else
-		{
-			// Is not a foreign key.
-			echo "<th>".niceName($class_value, $class_attribute)."</th>";
-		}
-	}
 	
 	
-	foreach ($join_tables as $jt_key => $jt_value)
-	{
-		$pos = strpos($jt_value,$here);
-		if($pos === false) {
-						// string needle NOT found in haystack
-		}
-		else {		// string needle found in haystack
-						
-			$there = str_replace("_","",$jt_value);
-			$there = str_replace($here,"",$there);
-			
-			echo "<th>associated ".$there;
-			//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
-			//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
-			//include "view_displayjt.php";
-			//echo "</div>";
-		}
-	}
-	
-	
-	
-	
+			foreach ($join_tables as $jt_key => $jt_value)
+			{
+				$pos = strpos($jt_value,$here);
+				if($pos === false) {
+								// string needle NOT found in haystack
+				}
+				else {		// string needle found in haystack
+								
+					$there = str_replace("_","",$jt_value);
+					$there = str_replace($here,"",$there);
+					
+					echo "<th>associated ".$there."</th>";
+					//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
+					//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
+					//include "view_displayjt.php";
+					//echo "</div>";
+				}
+			}
+?>
+		</tr>
+<?php 	
 
+	// Put the data from the db into the table.
 	$obj_class = MyActiveRecord::FindBySql($class_value, 'SELECT * FROM '.$class_value.' WHERE id > -1 ORDER BY id');
-	
+	//echo "<pre>"; var_dump($obj_class); echo "</pre>";
+
 	foreach ($obj_class as $obj_key => $obj_value)
 	{
 		echo "<tr>";
 		foreach (MyActiveRecord::Columns($class_value) as $obj_attribute => $obj_attr_value)
 		{
+			// Now create the table columns but not the referred_as column if defined as hidden.
+			if ($obj_attribute == "referred_as" && hiddenReferredAs($class_value)) {
+				continue;
+			}
+
 			if ($obj_attribute=="id")
 			{
-				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a>";
+				// PRIMARY KEYS
+				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
 			}
 			else if (strlen($obj_attribute)> 2 && !(strpos($obj_attribute,"_id")===false))
 			{
-				//$related_class = substr($obj_attribute, 0, -3);
+				// FORGEIGN KEYS
 				$related_class = find_relatedclass($obj_attribute,$foreign_keys);
-				//echo "<td>related_class = ".$related_class;
-				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
-				
-				/*
-				if($obj_attribute == "from_location_id")
-				{
-					echo "CIAO!!!! ".$related_class." - ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
-				}
-				*/
-				
+				//echo " related_class = ".$related_class;
+				//echo " obj_attribute = ".$obj_attribute;
+
+				// 'foreign key'. 'foreign key referred as field' 
+				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as . "</td>";			
 			}
 			else
 			{
-				echo "<td>".$obj_value->$obj_attribute;
+				// DATA
+				echo "<td>".$obj_value->$obj_attribute."</td>";
 			}
-		}
+		} // end foreach of result row
 		
 		//////
 		
 		foreach ($join_tables as $jt_key => $jt_value)
-	{
-		$pos = strpos($jt_value,$here);
-		if($pos === false) {
-						// string needle NOT found in haystack
-		}
-		else {		// string needle found in haystack
-						
-			$there = str_replace("_","",$jt_value);
-			$there = str_replace($here,"",$there);
-			
-			echo "<td>";
-			$i = 0;
-			foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
-			{
-				if ($i == 0)
-				{
-				echo " ".$_favalue->referred_as;
-				$i++;
-				}
-				else
-				{
-				echo ", ".$_favalue->referred_as;
-				$i++;
-				}
+		{
+			$pos = strpos($jt_value,$here);
+			if($pos === false) {
+							// string needle NOT found in haystack
 			}
-			
-			//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
-			//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
-			//include "view_displayjt.php";
-			//echo "</div>";
-		}
-	}
+			else {		// string needle found in haystack
+							
+				$there = str_replace("_","",$jt_value);
+				$there = str_replace($here,"",$there);
+				// $there = the other table this table ($here) links to 
+				// ie if the join table is 'here_there' or 'there_here' when $here is 'here' $there will be 'there' 
+				
+				echo "<td>";
+				$i = 0;
+				foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
+				{
+					if ($i == 0)
+					{
+					echo " ".$_favalue->referred_as;
+					$i++;
+					}
+					else
+					{
+					echo ", ".$_favalue->referred_as;
+					$i++;
+					}
+				}
+				
+				//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
+				//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
+				//include "view_displayjt.php";
+				//echo "</div>";
+			}
+		} // end foreach of join tables
 		
 		///////
-		
-	}
+		echo "</tr>";
+	} // end foreach of results collection
 	
 ?>
 	</table>
 <?
 	} // end $mode != "confirm_search"
-	
-	
-	else      //  if $mode is equal to "confirm_search"!!!
+	else //  if $mode is equal to "confirm_search"!!!
 	{
 	
 ?>
-<table class=table1>
-		<tr>
+<table class="table1">
+<tr>
 <?
 	
 	$class_obj = $_REQUEST['class_obj'];
 	
 	$search_operator = $_REQUEST['search_operator'];
 	
+	// Build the table headers for the search results.
 	foreach (MyActiveRecord::Columns($class_value) as $class_attribute => $class_attr_value)
 	{
+		// If the column is the referred as columns check if it can be shown.
+		if ($class_attribute == "referred_as" && hiddenReferredAs($class_value)) {
+			continue;
+		}
+
+		// Column header for foreign keys.
 		if (in_array($class_attribute,$foreign_keys))
 		{
 			foreach ($foreign_keys as $fk_key => $fk_value)
 			{
 				if ($class_attribute == $fk_value)
 				{
-					echo "<th><!--class_attribute=".$class_attribute." fk_key=".$fk_key." -->".name_child_relationship($class_value,$fk_value);
+					echo "<th><!--class_attribute=".$class_attribute." fk_key=".$fk_key." -->".name_child_relationship($class_value,$fk_value)."</th>";
 				}
 			}
 			//echo "<th>owned by";
 		}
-		else
+		else //Column header for other fields.
 		{
-			echo "<th>".$class_attribute;
+			echo "<th>".niceName($class_value, $class_attribute)."</th>";
 		}
 	}
 	
@@ -176,7 +190,7 @@
 			$there = str_replace("_","",$jt_value);
 			$there = str_replace($here,"",$there);
 			
-			echo "<th>associated ".$there;
+			echo "<th>associated ".$there."</th>";
 			//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
 			//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
 			//include "view_displayjt.php";
@@ -184,7 +198,7 @@
 		}
 	}
 	
-	
+	//// SEARCH STUFF ////
 	
 	$strSQLsearch = 'Select * from '.strtolower($class_obj).' where id>=0 ';  // the search query has been initialised
 	$strSQLor = 'Select * from '.strtolower($class_obj).' where id<0 ';
@@ -293,9 +307,7 @@
 			$strSQLsearch = $strSQLsearch." ".$search_operator." id in (".$innerSelect.")";
 		}
 	}
-	
-	
-	//////////
+	////////// END SEARCH STUFF //////////
 	
 	//echo "<p>".$strSQLsearch;
 	
@@ -306,9 +318,14 @@
 		echo "<tr>";
 		foreach (MyActiveRecord::Columns($class_value) as $obj_attribute => $obj_attr_value)
 		{
+			// Check for and ignore hidden referred_as columns
+			if ($obj_attribute == "referred_as" && hiddenReferredAs($class_value)) {
+				continue;
+			}
+
 			if ($obj_attribute=="id")
 			{
-				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a>";
+				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
 			}
 			else if (strlen($obj_attribute)> 2 && !(strpos($obj_attribute,"_id")===false))
 			{
@@ -316,65 +333,58 @@
 				$related_class = find_relatedclass($obj_attribute,$foreign_keys);
 				
 				//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class)->referred_as;
-				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as;
+				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as."</td>";
 			}
 			else
 			{
-				echo "<td>".$obj_value->$obj_attribute;
+				echo "<td>".$obj_value->$obj_attribute."</td>";
 			}
 		}
 		
 				//////
 		
 		foreach ($join_tables as $jt_key => $jt_value)
-	{
-		$pos = strpos($jt_value,$here);
-		if($pos === false) {
-						// string needle NOT found in haystack
-		}
-		else {		// string needle found in haystack
-						
-			$there = str_replace("_","",$jt_value);
-			$there = str_replace($here,"",$there);
-			
-			echo "<td>";
-			$i = 0;
-			foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
-			{
-				if ($i == 0)
+		{
+			$pos = strpos($jt_value,$here);
+			if($pos === false) {
+							// string needle NOT found in haystack
+			}
+			else {		// string needle found in haystack
+							
+				$there = str_replace("_","",$jt_value);
+				$there = str_replace($here,"",$there);
+				
+				echo "<td>";
+				$i = 0;
+				foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
 				{
-				echo " ".$_favalue->referred_as;
-				$i++;
+					if ($i == 0)
+					{
+					echo " ".$_favalue->referred_as;
+					$i++;
+					}
+					else
+					{
+					echo ", ".$_favalue->referred_as;
+					$i++;
+					}
 				}
-				else
-				{
-				echo ", ".$_favalue->referred_as;
-				$i++;
-				}
+				
+				//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
+				//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
+				//include "view_displayjt.php";
+				//echo "</div>";
 			}
 			
-			//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
-			//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
-			//include "view_displayjt.php";
-			//echo "</div>";
 		}
-	}
-		
-		///////
-		
-		
-		
-		
-		
-	}
+		echo "</tr>";
+	} // End foreach of result collection
 	
 	
 	//echo $strSQLsearch."<br>";  Check the SQl string has been properly formed
 	
 ?>
-
-	</table>
-
+</table>	
 <?
-	}   //end else ($mode is equal to "confirm_search)" !!!
+}   //end else ($mode is equal to "confirm_search)" !!!
 ?>
