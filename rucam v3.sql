@@ -27,10 +27,8 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 
 CREATE TABLE IF NOT EXISTS `authorisation` (
   `id` int(11) NOT NULL auto_increment,
-  `cards_id` int(11) NOT NULL,
-  `fixtures_id` int(11) NOT NULL,
-  `start` date NOT NULL,
-  `expires` date NOT NULL,
+  `card_id` int(11) NOT NULL,
+  `fixture_id` int(11) NOT NULL,
   `checkin` datetime default NULL,
   `checkout` datetime default NULL,
   PRIMARY KEY  (`id`)
@@ -46,6 +44,8 @@ CREATE TABLE IF NOT EXISTS `cards` (
   `id` int(11) NOT NULL auto_increment,
   `competitors_id` int(11) NOT NULL,
   `cardstatus_id` int(11) NOT NULL,
+  `validfrom` date NOT NULL,
+  `validuntil` date NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `cardstatus` (
 CREATE TABLE IF NOT EXISTS `competitors` (
   `id` int(11) NOT NULL auto_increment,
   `titles_id` int(11) NOT NULL,
-  `name` varchar(150) collate utf8_unicode_ci NOT NULL,
+  `referred_as` varchar(150) collate utf8_unicode_ci NOT NULL COMMENT 'name', 
   `role` varchar(100) collate utf8_unicode_ci NOT NULL,
   `teams_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `fixtures` (
   `home_teams_id` int(11) NOT NULL,
   `away_teams_id` int(11) NOT NULL,
   `venues_id` int(11) NOT NULL,
-  `date` date NOT NULL,
+  `datetime` datetime NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
 
@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS `titles` (
 
 CREATE TABLE IF NOT EXISTS `venues` (
   `id` int(11) NOT NULL auto_increment,
-  `referred_as` varchar(100) collate utf8_unicode_ci NOT NULL,
+  `referred_as` varchar(100) collate utf8_unicode_ci NOT NULL COMMENT 'stadium name',
   `town` varchar(100) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=5 ;
@@ -136,7 +136,7 @@ INSERT statements. Inserts all data about teams, titles, competitors, cardstatus
 Will not replace entries on the database that already have the same ID, remove IGNORE pretext to
 remove this feature
 
-NOTE: Accents in characters (é,ó,ú) may be required in a few entries but have been left out for the time
+NOTE: Accents in characters (Ã©,Ã³,Ãº) may be required in a few entries but have been left out for the time
 being.
 **/
 
@@ -152,7 +152,7 @@ INSERT IGNORE INTO `titles` (`id`, `referred_as`) VALUES
 (2, 'Ms'),
 (3, 'Dr');
 
-INSERT IGNORE INTO `competitors` (`id`, `titles_id`, `name`, `role`, `teams_id`) VALUES
+INSERT IGNORE INTO `competitors` (`id`, `titles_id`, `referred_as`, `role`, `teams_id`) VALUES
 (1, '1', 'Chris Robshaw', 'Captain', '1'),
 (2, '1', 'Dylan Hartley', 'Hooker', '1'),
 (3, '1', 'Stuart Lancaster', 'Head Coach', '1'),
@@ -174,38 +174,21 @@ INSERT IGNORE INTO `cardstatus` (`id`, `referred_as`) VALUES
 (1, 'Active'),
 (2, 'Expired');
 
-INSERT IGNORE INTO `cards` (`id`, `competitors_id`, `cardstatus_id`) VALUES
-(1, '1', '1'),
-(1, '2', '1'),
-(1, '3', '1'),
-(1, '4', '1'),
-(1, '5', '1'),
-(1, '6', '1'),
-(1, '7', '1'),
-(1, '8', '1'),
-(1, '9', '1'),
-(1, '10', '1'),
-(1, '11', '1'),
-(1, '12', '1'),
-(1, '13', '1'),
-(1, '14', '1'),
-(1, '15', '1'),
-(1, '16', '1');
-
 INSERT IGNORE INTO `venues` (`id`, `referred_as`,`town`) VALUES
 (1, 'Twickenham', 'London'),
 (2, 'Millenium', 'Cardiff'),
 (3, 'Villa Park', 'Birmingham'),
 (4, 'Stadiummk', 'Milton Keynes');
 
+/**
+DATE - format YYYY-MM-DD
+TIME - hh:mm:ss
+DATETIME - 1998-01-02 00:00:00.000
+**/
 
-
-
-
-
-
-
-
-
-
-
+INSERT IGNORE INTO `fixtures` (`id`, `home_teams_id`, `away_teams_id`, `venues_id`, `datetime`) VALUES
+(1, '1', '3', '1', '2015-09-18 20:00:00'),
+(2, '4', '3', '2', '2015-09-23 16:45:00'),
+(3, '1', '2', '1', '2015-09-26 20:00:00'),
+(4, '4', '5', '3', '2015-09-27 12:00:00'),
+(5, '1', '4', '1', '2015-10-03 20:00:00');
