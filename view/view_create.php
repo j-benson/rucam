@@ -5,11 +5,16 @@
 	
 	echo "<p class='p1'>Create New ".singularName($class_obj, true)."</p>";
 
+	/// POST ///
 	if (isset($_REQUEST['post_create']))
 	{
 		post_create_message($_REQUEST['post_create'],$class_obj);
 	}
-	
+	if (isset($_REQUEST['post_error']))
+	{
+		post_create_error_message($_REQUEST['post_error'],$class_obj);
+	}
+	////
 	
 	echo "<table class=table1><form id=form_create action=".$current_file_name."?here=".$here."&mode=confirm_create&class_obj=".$class_obj." method=post>";
 	

@@ -18,6 +18,10 @@
 	// in this array below we list all foreign keys: this array MUST EXIST: if empty then uncomment line below (and comment the following one!)
 	//foreign_keys=array();
 	$foreign_keys = array('titles_id','teams_id','competitors_id','cardstatus_id','home_teams_id','away_teams_id','venues_id','cards_id','fixtures_id'); 
+
+	$errMessages = array();
+	// addError("model", "Error added in model");
+	// echo " model "; var_dump($_errorMessages);
 	
 	// relationships between entities/classes are named below: if no name has
 	// been given to a certain relationship, the bare foreign key would be displayed
@@ -110,22 +114,6 @@
 		return $name;
 	}
 
-	/** NAHH
-	 * Used when displaying the data in the tables. When a foreign key links to a table that does not have
-	 * a 'referred_as' field because it contains anther foreign key. This function maps which foreign key to use
-	 * that referres to a table with a 'referred_as' field and so what data to show to the user.
-	 * @param $relatedClass The name of the class that does not have a referred as field that was retured by the 
-	 * 					    find_relatedclass function.
-	 * @return The name of the foreign key to get the data from. Return null if there is no redirect match.
-	 */
-	function foreignKeyRedirect($relatedClass) {
-		if ($here == "authorisation" && $relatedClass == "cards") {
-			return "competitors_id";
-		} else {
-			return null;
-		}
-	}
-
 	/**
 	 * Whether the refered_as field in a perticular table/class should be hidden from the user or not.
 	 * @param $class The name of the class or table to check if the referred_as field should be hidden.
@@ -144,44 +132,70 @@
 	
 	// classes are defined below as extensions of MyActiveRecord class
 	class competitors extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class teams extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class cards extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class fixtures extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 	
 	class authorisation extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class venues extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class titles extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
+		function destroy(){
+		}	
+	}
 		
 	class cardstatus extends MyActiveRecord{
-			function destroy(){
-			}	
-		}
-	
+		function destroy(){
+		}	
+	}
 
+	/** 
+	 * Converts php array into inline array definition for javascript.
+	 * Creates {"key":"value","key":"value"} .. 
+	 * @param $errors The error array defined in model.
+	 */ 
+	function errorStr($errors) {
+		$str = "{";
+		$max = count($errors);
+		$count = 0;
+		foreach ($errors as $key => $msg) {
+			$str .= "\"$key\":\"$msg\"";
+			if ($max > 1 && $count++ < $max -1) {
+				$str .= ",";
+			}
+		}
+		$str .= "}";
+		return $str;
+	}
+
+	/**
+	 * Checks whether there are any errors.
+	 * @param $errorArray The array holding the errors.
+	 * @return True when there are errors, false when not.
+	 */
+	function hasErrors($errorArray) {
+		return count($errorArray) > 0;
+	}
 ?>

@@ -17,8 +17,6 @@
 
 	// Set this to true to prevent the controller inserting into the database.
 	$stopSave = false;
-	$stopSaveMessage = null;
-
 
 	// -- Logic for individual classes creation
 	if ($class_obj == "fixtures") {
@@ -30,12 +28,19 @@
 	if ($class_obj == "competitors") {
 		// when inserting new competitor, check for fixtures and add authorisation for those fixtures.
 		// update their card and authorisations
+
+		// TESTING force error.
+		// $errMessages["referred_as"] = "This nation already exists.";
+		// $errMessages["nickname"] = "Nick name was not filled in.";
+		// $stopSave = true;
 	}
 	if ($class_obj == "cards") {
 		
 	}
 	if ($class_obj == "authorisation") {
 		//$pino['cards_id']
+		// Card must be valid
+		// 
 	}
 	// -- End Logic for individual classes.
 

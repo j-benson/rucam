@@ -1,6 +1,5 @@
 <?
 	include "model/model.php";
-	
 	// VF1 version 1.6
 ?>
 <html>

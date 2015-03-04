@@ -26,6 +26,16 @@
 		echo "<p class=p_message>[".date('H:i:s')."] ".$classino." new record (id = ".$pino.") has been created!</p>";
 	}
 
+	function post_create_error_message($urlPostMsg, $classino)
+	{
+		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not created.</p><ul>';
+		$messages = unserialize($urlPostMsg);
+		foreach ($messages as $m) {
+			echo '<li>'. $m .'</li>';
+		}
+		echo "</ul></div>";
+	}
+
 ?>
       
       

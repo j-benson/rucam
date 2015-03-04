@@ -34,6 +34,11 @@ function confirm_update(form_id)
 	}
 }
 
+function showErrorMsg(messages) {
+	for (var key in messages) {
+		// messages[key]; gives me the message.
+	}
+}
 
 
 

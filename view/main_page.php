@@ -7,7 +7,6 @@
 ?>
 
 <?
-
 			if (($mode != "confirm_update") && ($mode != "confirm_create")) 
 			{
 				include "controller/controller_retrieve.php";
@@ -33,7 +32,13 @@
 				include "controller/controller_create.php";
 				// echo "<script>alert('".$here." ".$_REQUEST['input_referred_as']." has been created');</script>";
 				// Redirects the page to show last added record.
-				echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_create=".$last_inserted_record."';</script>";
+
+				if (hasErrors($errMessages)) {
+					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_error=".serialize($errMessages)."';</script>";
+					//showErrorMsg(".errorStr($errMessages).")</script>";
+				} else {
+					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_create=".$last_inserted_record."';</script>";
+				}
 			}
 
 			if ($mode == "update")
