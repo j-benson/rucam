@@ -20,8 +20,6 @@
 	$foreign_keys = array('titles_id','teams_id','competitors_id','cardstatus_id','home_teams_id','away_teams_id','venues_id','cards_id','fixtures_id'); 
 
 	$errMessages = array();
-	// addError("model", "Error added in model");
-	// echo " model "; var_dump($_errorMessages);
 	
 	// relationships between entities/classes are named below: if no name has
 	// been given to a certain relationship, the bare foreign key would be displayed
@@ -92,6 +90,14 @@
 				return "ID";
 			case "controlledby":
 				return "Controlled By";
+			case "validfrom":
+				return "Valid From";
+			case "validuntil":
+				return "Valid Until";
+			case "checkin":
+				return "Check In";
+			case "checkout":
+				return "Check Out";
 			case "referred_as":
 				if ($class_name == "competitors") return "Name";
 				if ($class_name == "teams") return "Nation";
@@ -169,25 +175,6 @@
 	class cardstatus extends MyActiveRecord{
 		function destroy(){
 		}	
-	}
-
-	/** 
-	 * Converts php array into inline array definition for javascript.
-	 * Creates {"key":"value","key":"value"} .. 
-	 * @param $errors The error array defined in model.
-	 */ 
-	function errorStr($errors) {
-		$str = "{";
-		$max = count($errors);
-		$count = 0;
-		foreach ($errors as $key => $msg) {
-			$str .= "\"$key\":\"$msg\"";
-			if ($max > 1 && $count++ < $max -1) {
-				$str .= ",";
-			}
-		}
-		$str .= "}";
-		return $str;
 	}
 
 	/**

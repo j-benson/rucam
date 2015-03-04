@@ -26,14 +26,27 @@
 		echo "<p class=p_message>[".date('H:i:s')."] ".$classino." new record (id = ".$pino.") has been created!</p>";
 	}
 
-	function post_create_error_message($urlPostMsg, $classino)
+	function post_create_error_message($urlPostVar, $classino)
 	{
-		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not created.</p><ul>';
-		$messages = unserialize($urlPostMsg);
+		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not created.</p>';
+		echo showMessagesList($urlPostVar);
+		echo "</div>";
+	}
+
+	function post_update_error_message($urlPostVar, $classino)
+	{
+		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not updated.</p>';
+		echo showMessagesList($urlPostVar);
+		echo "</div>";
+	}
+
+	function showMessagesList($urlPostVar) {
+		$str = "<ul>";
+		$messages = unserialize($urlPostVar);
 		foreach ($messages as $m) {
-			echo '<li>'. $m .'</li>';
+			$str .= '<li>'. $m .'</li>';
 		}
-		echo "</ul></div>";
+		return $str."</ul>";
 	}
 
 ?>

@@ -55,8 +55,12 @@
 			{
 				
 				include "controller/controller_update.php";
-				//echo "<script>alert('".$here." id ".$class_obj_id." (".$_REQUEST['input_referred_as'].") has been updated');</script>";
-				echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
+				
+				if (hasErrors($errMessages)) {
+					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
+				} else {
+					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
+				}
 				
 			}
 

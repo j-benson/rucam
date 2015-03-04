@@ -7,10 +7,16 @@
 	
 	echo "<p class=p1>Update ".singularName($here, true)."</p>";
 	
+	/// POST ///
 	if (isset($_REQUEST['post_update']))
 	{
 		post_update_message($_REQUEST['post_update'],$here);
 	}
+	if (isset($_REQUEST['post_error']))
+	{
+		post_update_error_message($_REQUEST['post_error'],$here);
+	}
+	////
 	
 	//echo "</p>";
 	echo "<table class=table1><form id='update_".$here."' action=".$current_file_name."?here=".$here."&mode=confirm_update&class_obj=".$here."&class_obj_id=".$class_obj_id." method=post>";
