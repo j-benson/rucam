@@ -141,7 +141,6 @@ remove this feature
 NOTE: Accents in characters may be required in a few entries but have been left out for the time
 being.
 **/
-/**
 CREATE TRIGGER `issue_first_card`
 AFTER INSERT
 	ON `competitors`
@@ -156,7 +155,6 @@ DECLARE @ID int, @Name nvarchar(30);
 	VALUES
 	(1, competitors_id, 1, '1995-06-06', '1995-09-93', referred_as);
 END
-**/
 
 INSERT IGNORE INTO `teams` (`id`, `referred_as`, `controlledby`,`acronym`,`nickname`) VALUES
 (1, 'England', 'Rugby Football Union', 'RFU', 'England'),
