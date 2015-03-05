@@ -10,14 +10,14 @@
 	include './include/MyActiveRecord.0.4.php';
 	
 	//in this array we list all and only those classes we like to CRUD manage from the main menu 
-	$classes = array('teams','fixtures','competitors','cards','authorisation');  
+	$classes = array('teams','fixtures','competitors','cards');  
 	
 	// in this array we list all join tables which hold many to many relationships between two given classes of objects
-	$join_tables = array();	
+	$join_tables = array('cards_fixtures');	
 	
 	// in this array below we list all foreign keys: this array MUST EXIST: if empty then uncomment line below (and comment the following one!)
 	//foreign_keys=array();
-	$foreign_keys = array('titles_id','teams_id','competitors_id','cardstatus_id','home_teams_id','away_teams_id','venues_id','cards_id','fixtures_id'); 
+	$foreign_keys = array('titles_id','teams_id','competitors_id','cardstatus_id','home_teams_id','away_teams_id','venues_id', 'cards_id', 'fixtures_id'); 
 
 	$errMessages = array();
 	

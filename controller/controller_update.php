@@ -32,9 +32,9 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 		// update their card and authorisations
 
 		// TESTING force error.
-		$errMessages["referred_as"] = "This nation already exists.";
-		$errMessages["nickname"] = "Nick name was not filled in.";
-		$stopSave = true;
+		// $errMessages["referred_as"] = "This nation already exists.";
+		// $errMessages["nickname"] = "Nick name was not filled in.";
+		// $stopSave = true;
 	}
 	if ($class_obj == "cards") {
 		
