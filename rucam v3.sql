@@ -22,13 +22,13 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `authorisation`
+-- Table structure for table `cards_fixtures` (join table)
 --
 
-CREATE TABLE IF NOT EXISTS `authorisation` (
+CREATE TABLE IF NOT EXISTS `cards_fixtures` (
   `id` int(11) NOT NULL auto_increment,
-  `card_id` int(11) NOT NULL,
-  `fixture_id` int(11) NOT NULL,
+  `cards_id` int(11) NOT NULL,
+  `fixtures_id` int(11) NOT NULL,
   `checkin` datetime default NULL,
   `checkout` datetime default NULL,
   PRIMARY KEY  (`id`)
@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS `competitors` (
   `role` varchar(100) collate utf8_unicode_ci NOT NULL,
   `teams_id` int(11) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=17 ;
 
 -- --------------------------------------------------------
 
@@ -91,7 +91,7 @@ CREATE TABLE IF NOT EXISTS `fixtures` (
   `datetime` datetime NOT NULL,
   `referred_as` varchar (100) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -106,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `teams` (
   `acronym` varchar(50) collate utf8_unicode_ci NOT NULL,
   `nickname` varchar(100) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
 
 -- --------------------------------------------------------
 
@@ -151,8 +151,10 @@ INSERT IGNORE INTO `teams` (`id`, `referred_as`, `controlledby`,`acronym`,`nickn
 
 INSERT IGNORE INTO `titles` (`id`, `referred_as`) VALUES
 (1, 'Mr'),
-(2, 'Ms'),
-(3, 'Dr');
+(2, 'Mrs'),
+(3, 'Miss'),
+(4, 'Ms'),
+(5, 'Dr');
 
 INSERT IGNORE INTO `competitors` (`id`, `titles_id`, `referred_as`, `role`, `teams_id`) VALUES
 (1, '1', 'Chris Robshaw', 'Captain', '1'),
