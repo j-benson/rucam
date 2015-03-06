@@ -24,32 +24,34 @@
 	$w_columns = MyActiveRecord::Columns($class_obj);
 	foreach($w_columns as $wcolumns_key => $wcolumns_value)
 	{
-		// Check for and ignore hidden referred_as columns
+		// LEAVE AT TOP - Check for and ignore hidden referred_as columns
 		if ($wcolumns_key == "referred_as" && hiddenReferredAs($class_value)) {
 			continue;
 		}		
 
+		// FIELD NAMES
+		echo "<tr><td>".niceName($class_value, $wcolumns_key)."</td>";
+
 		if ($wcolumns_key == "id")
-		{
-			echo "<tr><td>".strtoupper($wcolumns_key)."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' readonly=true>";
+		{ // PRIAMRY KEY
+			echo "<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' readonly=true></td>";
 		}
 		else
 		{
 			if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 			{
-				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'></td>";
-				echo "<td><input type=button value='Set Date' onclick=displayDatePicker('input_".$wcolumns_key."',false,'ymd','-'); >";
-				
-				//echo "<tr id='arow'><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'>";
-				//echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'><td><div id='aaa'>&nbsp;</div><script>var b = new free_date_picker('b', 'aaa', 'input_".$wcolumns_key."', 1, true, 'en');</script>";
-				
-				
+				echo "<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"></td>";
+				echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" ></td>";
 			}
 			elseif (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
-			{
+			{ // FOREIGN KEYS
+				
 				//$related_class = substr($wcolumns_key, 0, -3);
 				$related_class = find_relatedclass($wcolumns_key,$foreign_keys);
-				echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'><td><select id='select_".$wcolumns_key."' onChange=javascript:change_obj('".$wcolumns_key."')>";
+
+				// Starts a select tag for the foreign key table.
+				echo "<td><select id='select_".$wcolumns_key."' name='input_".$wcolumns_key."'>";
+				//echo "<option></option>"; // no need in the update mode for this
 				
 				foreach ($obj_class = MyActiveRecord::FindBySql($related_class, 'SELECT * FROM '.$related_class.' WHERE id > -1 ORDER BY referred_as') as $obj_attribute => $obj_attr_value)
 				{
@@ -88,12 +90,14 @@
 					// 	}
 					// }
 					/////////////////////////
+
+					echo "</option>";
 				}
 				echo "</select>";
 			}
 			else
-			{
-				echo "<tr><td>".niceName($here, $wcolumns_key)."<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'>";
+			{ // DATA
+				echo "<td><input type=text name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."'></td>";
 			}
 		}
 	}

@@ -29,7 +29,7 @@
 	{
 		//echo "<p>" . $wcolumns_key . "</p>";
 
-		// Check for and ignore hidden referred_as columns
+		// LEAVE AT TOP - Check for and ignore hidden referred_as columns
 		if ($wcolumns_key == "referred_as" && hiddenReferredAs($class_value)) {
 			continue;
 		}
@@ -38,35 +38,41 @@
 		{
 			if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 			{
-				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value=''></td>";
-				echo "<td><input type=button value='Set Date' onclick=displayDatePicker('input_".$wcolumns_key."',false,'ymd','-'); /></td>";
+				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"></td>";
+				echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" /></td>";
 			}
 			else
 			{
-				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' /></td>";
+				// FIELD NAMES
+				echo "<tr><td>".niceName($class_value, $wcolumns_key)."</td>";
 				
 				// FOREIGN KEY LINKS - creates dropdown boxes for fk referred_as column
 				if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
 				{
-					//echo "</p>" . $wcolumns_key . " is a foreign key.</p>";
+					// DEFAULT FOREIGN KEY
+					$default = defaultForeignKey($mode, $class_value, $wcolumns_key);
 
 					// Find the class name that the foreign field name ($wcolumns_key) relates to ie titles_id field relates to the titles table/class
 					$related_class = find_relatedclass($wcolumns_key,$foreign_keys);
 					//echo "<p>Related class: $related_class</p>";
 
-					// Starts a select tag for the forgeign key table.
-					echo "<td><select id='select_".$wcolumns_key."' onChange=javascript:change_obj('".$wcolumns_key."') ><option></option>";
-					// Adds options to the select tag containing the values from the foreign key.
-
-					// ERROR: Unknown column referred as
+					// Select will be disabled and will not post so add hidden input that will post.
+					if ($default != null && $default["disable"]) {
+						echo "<input type='hidden' name='input_". $wcolumns_key ."' value='". $default["id"] ."'/>";
+					}
+					// Starts a select tag for the foreign key table.
+					echo "<td><select id='select_".$wcolumns_key."' name='input_".$wcolumns_key."'".($default != null && $default["disable"] ? " disabled" : "").">";
+					echo "<option></option>"; //TODO: in option could put no cards etc
+					
+					// Adds options to the select tag containing the values from the foreign key's referred_as field.
 					foreach ($obj_class = MyActiveRecord::FindBySql($related_class, 'SELECT * FROM '.$related_class.' WHERE id > -1 ORDER BY referred_as') as $obj_attribute => $obj_attr_value)
 					{					
-						echo "<option value='".$obj_attr_value->id."'>".$obj_attr_value->referred_as;
+						echo "<option value='".$obj_attr_value->id."'". ($default != null && $default["id"] == $obj_attr_value->id ? " selected" : "").">".$obj_attr_value->referred_as;
 						
 					//echo "(".$wcolumns_key.")";
 						
-						// Adds other related infomation about foreign key links in the dropdown box only appears on the auth page it seems
-						// Turned it off as using hidden referred as to show this infomation and that duplicates the information
+					// Adds other related infomation about foreign key links in the dropdown box only appears on the auth page it seems
+					// Turned it off as using hidden referred_as to have more control over what information is shown to the user.
 						// if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
 						// {
 						// 	$related_superclass = find_relatedclass($wcolumns_key,$foreign_keys);
@@ -87,14 +93,17 @@
 						// 	}
 						// }
 						/////////////////////
+						echo "</option>";
 					}
-					echo "</select ></td>";
+					echo "</select></td>";
+				}
+				else // TEXT DATA
+				{
+					echo "<td><input type='text' id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' /></td>";
 				}
 			
 			}
 		}
-
-		//echo "<p>end loop</p>";
 	}
 	
 	foreach ($join_tables as $jt_key => $jt_value)
@@ -113,7 +122,8 @@
 	}
 	
 
-	echo "<tr><td><td><input type=button value='Create New ".singularName($here, true)."' onClick=javascript:confirm_create('form_create');><td><input type=reset >";
+	echo "<tr><td colspan='2'><input type='button' value='Create New ".singularName($here, true)."' onClick=\"javascript:confirm_create('form_create');\" /><td>";
+	echo "<input type='reset'/></tr>";
 	echo "</table></form>";
 	
 ?>

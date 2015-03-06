@@ -121,6 +121,18 @@
 	}
 
 	/**
+	 * Defines a name for the joined table in this table.
+	 * @param $thisTable The name of the current table
+	 * @param $joinedTable The name of the table this table joins to.
+	 */
+	function joinName($thisTable, $joinedTable) {
+		if ($thisTable == "cards" && $joinedTable == "fixtures") return "Authorised Fixtures";
+		if ($thisTable == "fixtures" && $joinedTable == "cards") return "Authorised Cards";
+
+		return $joinedTable;
+	}
+
+	/**
 	 * Whether the refered_as field in a perticular table/class should be hidden from the user or not.
 	 * @param $class The name of the class or table to check if the referred_as field should be hidden.
 	 * @return True when the referred_as field should ne hidden and false if it should be shown.
@@ -132,6 +144,19 @@
 		return false;
 	}
 
+	/**
+	 * Define default foreign key values and whether they are disabled from editing.
+	 * @param $mode Whether creating or updating.
+	 * @param $class The name of the class being created or updated.
+	 * @param $field The name of the field being created or updated.
+	 * @return An array with the default id under the index 'id' and whether it 
+	 *         should be disabled under the index 'disable'.
+	 */
+	function defaultForeignKey($mode, $class, $field) {
+		if ($mode == "create" && $class == "cards" && $field == "cardstatus_id") return array("id" => 1, "disable" => true);;
+
+		return null;
+	}
 
 	// this array has been initiated, but its usage will be defined in future versions of VF1
 	$objects = array();
