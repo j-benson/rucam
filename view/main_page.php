@@ -63,6 +63,10 @@
 				}
 				
 			}
+			
+			if ($mode == "update_function") {
+				include "controller/controller_update_functions.php";
+			}
 
 			// cheeky hack!
 			if ($mode == "confirm_search")

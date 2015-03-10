@@ -19,60 +19,52 @@
 	//foreign_keys=array();
 	$foreign_keys = array('titles_id','teams_id','competitors_id','cardstatus_id','home_teams_id','away_teams_id','venues_id', 'cards_id', 'fixtures_id'); 
 
+	/// TABLES ///
+	define(T_TEAMS, "teams");
+	define(T_FIXTURES, "fixtures");
+	define(T_COMPETITORS, "competitors");
+	define(T_CARDS, "cards");
+	define(T_CARDS_FIXTURES, "cards_fixtures");
+	////
+
 	$errMessages = array();
 	
 	// relationships between entities/classes are named below: if no name has
 	// been given to a certain relationship, the bare foreign key would be displayed
 	function name_child_relationship($class_name,$foreign_key)
 	{
-		if ($class_name == 'competitors' && $foreign_key == 'titles_id')
+		if ($class_name == T_COMPETITORS && $foreign_key == 'titles_id')
 		{
 			return "Title";
 		}
-		else if ($class_name == 'competitors' && $foreign_key == 'referred_as')
+		else if ($class_name == T_COMPETITORS && $foreign_key == 'referred_as')
 		{
 			return "Name";
 		}
-		else if ($class_name == 'competitors' && $foreign_key == 'teams_id')
+		else if ($class_name == T_COMPETITORS && $foreign_key == 'teams_id')
 		{
 			return "Team";
 		}
-		else if ($class_name == 'cards' && $foreign_key == 'competitors_id')
+		else if ($class_name == T_CARDS && $foreign_key == 'competitors_id')
 		{
 			return "Competitor";
 		}
-		else if ($class_name == 'cards' && $foreign_key == 'cardstatus_id')
+		else if ($class_name == T_CARDS && $foreign_key == 'cardstatus_id')
 		{
 			return "Status";
 		}
-		else if ($class_name == 'fixtures' && $foreign_key == 'home_teams_id')
+		else if ($class_name == T_FIXTURES && $foreign_key == 'home_teams_id')
 		{
 			return "Home Team";
 		}
-		else if ($class_name == 'fixtures' && $foreign_key == 'away_teams_id')
+		else if ($class_name == T_FIXTURES && $foreign_key == 'away_teams_id')
 		{
 			return "Away Team";
 		}
-		else if ($class_name == 'fixtures' && $foreign_key == 'venues_id')
+		else if ($class_name == T_FIXTURES && $foreign_key == 'venues_id')
 		{
 			return "Venue";
 		}
-		else if ($class_name == 'authorisation' && $foreign_key == 'cards_id')
-		{
-			return "Card";
-		}
-		else if ($class_name == 'authorisation' && $foreign_key == 'fixtures_id')
-		{
-			return "Fixture";
-		}
-		else if ($class_name == 'entries' && $foreign_key == 'cards_id')
-		{
-			return "Card";
-		}
-		else if ($class_name == 'entries' && $foreign_key == 'venues_id')
-		{
-			return "Venue";
-		} 
 	}
 
 	// For displaying to the user only, define better names for each field or at least capitalise the words.
@@ -99,7 +91,7 @@
 			case "checkout":
 				return "Check Out";
 			case "referred_as":
-				if ($class_name == "competitors") return "Name";
+				if ($class_name == T_COMPETITORS) return "Name";
 				if ($class_name == "teams") return "Nation";
 			default:
 				return ucfirst($field);
@@ -126,8 +118,8 @@
 	 * @param $joinedTable The name of the table this table joins to.
 	 */
 	function joinName($thisTable, $joinedTable) {
-		if ($thisTable == "cards" && $joinedTable == "fixtures") return "Authorised Fixtures";
-		if ($thisTable == "fixtures" && $joinedTable == "cards") return "Authorised Cards";
+		if ($thisTable == T_CARDS && $joinedTable == T_FIXTURES) return "Authorised Fixtures";
+		if ($thisTable == T_FIXTURES && $joinedTable == T_CARDS) return "Authorised Cards";
 
 		return $joinedTable;
 	}
@@ -138,8 +130,8 @@
 	 * @return True when the referred_as field should ne hidden and false if it should be shown.
 	 */
 	function hiddenReferredAs($class) {
-		if ($class == "fixtures") return true;
-		if ($class == "cards") return true;
+		if ($class == T_FIXTURES) return true;
+		if ($class == T_CARDS) return true;
 
 		return false;
 	}
@@ -153,7 +145,7 @@
 	 *         should be disabled under the index 'disable'.
 	 */
 	function defaultForeignKey($mode, $class, $field) {
-		if ($mode == "create" && $class == "cards" && $field == "cardstatus_id") return array("id" => 1, "disable" => true);;
+		if ($mode == "create" && $class == T_CARDS && $field == "cardstatus_id") return array("id" => 1, "disable" => true);;
 
 		return null;
 	}
@@ -182,7 +174,7 @@
 		}	
 	}
 	
-	class authorisation extends MyActiveRecord{
+	class cards_fixtures extends MyActiveRecord{
 		function destroy(){
 		}	
 	}

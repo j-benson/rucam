@@ -122,4 +122,67 @@
 	
 	echo "<tr><td><td><input type=button value='Update ".singularName($here, true)."' onClick=javascript:confirm_update('update_".$here."')><td><input type=reset></table></form>";
 	
+
+	/// WHOLE TEAM AUTHORISATION ///
+	if ($class_value == T_TEAMS) {
+		// Find the competitors belonging to this team.
+		// $teamObj = MyActiveRecord::FindById($class_value, $class_obj_id);
+		// $competitorsObj = $teamObj->find_children(T_COMPETITORS);
+		// $comIds = array();
+		// foreach ($competitorsObj as $com) {
+		// 	array_push($comIds, $com->id);
+		// }
+		// All the cards in the team
+		// var_dump("SELECT * FROM ".T_CARDS." WHERE competitors_id IN (SELECT id FROM ".T_COMPETITORS." WHERE teams_id=".$class_obj_id.")");
+		// $cardsObj = MyActiveRecord::FindBySql(T_CARDS, "SELECT * FROM ".T_CARDS." WHERE competitors_id IN (SELECT id FROM ".T_COMPETITORS." WHERE teams_id=".$class_obj_id.")");
+		// var_dump($cardsObj);
+		// // Get list of card ids to compare to fixures.
+		// $cardIds = array();
+		// foreach ($cardsObj as $ca) {
+		// 	array_push($cardIds, $ca->id);
+		// }
+
+		// Competitors in the team
+		$competitors = MyActiveRecord::FindById(T_TEAMS, $class_obj_id)->find_children(T_COMPETITORS);
+		$numCompetitors = count($competitors);
+		$cardIds = array();
+		foreach ($competitors as $c) {
+			// find first most recent card
+			$card = MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$c->id, "validfrom DESC");
+			// if card found add its id to array
+			if ($card !== false) {
+				array_push($cardIds, $card->id);
+			}
+		}
+
+		$fixturesObj = MyActiveRecord::FindAll(T_FIXTURES, null, "datetime");
+
+		echo "<table class='table1'>";
+		echo "<form method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_auth&class_obj_id=".$class_obj_id."' >";
+		echo "<tr><th colspan='2'>Team Fixture Authorisation</th></tr>";
+		foreach ($fixturesObj as $fix) {
+			$numCards = 0;
+			// Find all the records in the auth join table for this fix that link to one of the competitors ids
+			$auths = null;
+			if (count($cardIds) == 0) {
+				$auths = false;
+			} else {
+				$auths = MyActiveRecord::FindAll(T_CARDS_FIXTURES, T_FIXTURES."_id=".$fix->id." AND ".T_CARDS."_id IN (".implode(",", $cardIds).")");
+			}
+			
+			// make bold if this fixture contains the team.
+			$bold = $fix->home_teams_id == $class_obj_id || $fix->away_teams_id == $class_obj_id;
+			echo "<tr><td>". ($bold?"<strong>":"") . $fix->referred_as;
+			echo "<br/>" . "(Competitors Currently Authorised: " . ($auths === false ? "0" : count($auths)) . "/". $numCompetitors . ")" . ($bold?"</strong>":""); 
+			echo "</td>";
+			echo "<td><input name='fixtures[]' type='checkbox' value='". $fix->id ."' /></td></tr>";
+			
+		}
+		echo "<tr><td colspan='2'><input type='submit' value='Add Authorisation'/></td></tr>";
+		//echo "<tr><td colspan='2'><span style='font-size:10px;'>Fixtures that this team is playing in are highlighted bold.</span></td></tr>";
+		
+		echo "</form>";
+		echo "</table>";
+		echo "<div style='font-size:12px; font-weight:bold; margin-left:20px;'>Fixtures that this team are participating in are highlighted bold.</div>";
+	}
 ?>
