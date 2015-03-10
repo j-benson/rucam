@@ -24,8 +24,12 @@
 	define(T_FIXTURES, "fixtures");
 	define(T_COMPETITORS, "competitors");
 	define(T_CARDS, "cards");
+	define(T_CARDSTATUS, "cardstatus");
 	define(T_CARDS_FIXTURES, "cards_fixtures");
-	////
+	/// CARD STATUSES ///
+	define(CS_VALID, "Valid");
+	define(CS_EXPIRED, "Expired");
+	///
 
 	$errMessages = array();
 	
@@ -201,5 +205,27 @@
 	 */
 	function hasErrors($errorArray) {
 		return count($errorArray) > 0;
+	}
+
+	/**
+	 * Checks whether a given card is valid or not. If a card is not valid and its status is
+	 * still valid this will update the status to exired.
+	 * @param $card The MyActiveRecord object for the card.
+	 */
+	function validCard($card) {
+		
+		$curdateInfo = getDate(time());
+		$curdate = new DateTime("{$curdateInfo['year']}-{$curdateInfo['mon']}-{$curdateInfo['mday']}");
+		$validuntildate = new DateTime($card->validuntil);
+		$cardstatus = $card->find_parent(T_CARDSTATUS);
+		if ($cardstatus->referred_as != CS_VALID || $curdate > $validuntildate) {
+			// update the status to expired only if it was valid
+			if ($cardstatus->referred_as == CS_VALID) {
+				$card->cardstatus_id = MyActiveRecord::FindFirst(T_CARDSTATUS, "referred_as='".CS_EXPIRED."'")->id;
+				$card->save();
+			}
+			return false;
+		}
+		return true;
 	}
 ?>
