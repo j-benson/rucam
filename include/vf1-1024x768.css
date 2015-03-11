@@ -266,7 +266,7 @@ li{
 		background: #EEEEDD;     /* DDDDAA: light gold; 999999: dark grey  */
 	}
 
-.post_error {
+.err_messages {
 	font-size: 14pt;
 	color: red;		/* yellow */
 	background: #EEEEDD; 

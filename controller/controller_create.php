@@ -14,18 +14,20 @@
 			}
 		}
 	}
+	$this_obj = MyActiveRecord::Create($class_obj, $pino);
 
 	// Set this to true to prevent the controller inserting into the database.
 	$stopSave = false;
 
 	// -- Logic for individual classes creation
-	if ($class_obj == "fixtures") {
+	if ($class_obj == T_FIXTURES) {
 		// Check for clashing fixtures, prevent saving these.
+		setFixtureReferredAs($this_obj);
 	}
-	if ($class_obj == "teams") {
+	if ($class_obj == T_TEAMS) {
 		// Check for clashing team names, prevent saving these.
 	}
-	if ($class_obj == "competitors") {
+	if ($class_obj == T_COMPETITORS) {
 		// when inserting new competitor, check for fixtures and add authorisation for those fixtures.
 		// update their card and authorisations
 
@@ -34,25 +36,14 @@
 		// $errMessages["nickname"] = "Nick name was not filled in.";
 		// $stopSave = true;
 	}
-	if ($class_obj == "cards") {
-		// echo "<pre>"; var_dump($_POST); echo "</pre>";
-		// echo "<pre>";var_dump($pino); echo "</pre>";
-		// die;
-	}
-	if ($class_obj == "authorisation") {
-		//$pino['cards_id']
-		// Card must be valid
-		// 
+	if ($class_obj == T_CARDS) {
+		setCardReferredAs($this_obj);
 	}
 	// -- End Logic for individual classes.
 
 
 	if (!$stopSave) {
 		// -- Insert the data in $pino into the database. --
-
-		//echo "<P>.".print_r($pino);
-	   $this_obj = MyActiveRecord::Create($class_obj, $pino );
-	   
 	   $this_obj->save();			// crucial command: disactivate  only if you don't want to save... 
 	   
 	   $last_inserted_record = $this_obj->id;

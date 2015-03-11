@@ -10,9 +10,9 @@
 	{
 		post_create_message($_REQUEST['post_create'],$class_obj);
 	}
-	if (isset($_REQUEST['post_error']))
+	if (isset($_REQUEST['err_messages']))
 	{
-		post_create_error_message($_REQUEST['post_error'],$class_obj);
+		post_create_error_message($_REQUEST['err_messages'],$class_obj);
 	}
 	////
 	

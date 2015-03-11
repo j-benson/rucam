@@ -66,7 +66,7 @@
 		$issueCard = true;
 		$validfromStr = $_POST["validfrom"];
 		$validuntilStr = $_POST["validuntil"];
-		if ($validfromStr == "" || $validuntilStr = "") {
+		if ($validfromStr == "" || $validuntilStr == "") {
 			$issueCard = false;
 			$errMessages["empty"] = "Both Valid From and Valid Until must be filled in.";
 		}
@@ -87,19 +87,20 @@
 			if ($competitors !== false) {
 				foreach ($competitors as $competitor) {
 					$card = getCard($competitor);
+					//echo "<pre>"; var_dump($card); echo "</pre>"; 
 					if ($card === false || ($card !== false && !validCard($card))) {
+
 						// Competitor does not have a card or their current card is no longer valid.
 						issueCard($competitor, $validfromStr, $validuntilStr);
 					} // else do not issue so not to duplicate.
 				}
 			}
 		}
-	} // end team cancel //
+	} // end team issue //
 
 	// EXPIRE ALL TEAM MEMBERS CARDS //
 	// Foreach competitor set their card's status to cancelled. 
 	if ($function == "team_expire_cards") {
-		echo "Expire cards being called";die;
 		// All competitors in team, false if no competitors
 		$competitors = getCompetitorsInTeam($class_obj_id);
 		if ($competitors !== false) {
@@ -116,37 +117,27 @@
 			$card = getCard($competitor);
 			if ($card === false || ($card !== false && !validCard($card))) {
 				// Competitor does not have a card or their current card is no longer valid.
-				$newCard = MyActiveRecord::Create(T_CARDS);
-				$newCard->competitors_id = $competitor->id;
-				$newCard->cardstatus_id = getCardStatusId(CS_VALID);
-				$newCard->validfrom = ""; // get from post.
-				$newCard->validuntil = ""; // get from post.
-				setCardReferredAs($newCard, $competitor);
-				$newCard->save();
+				
+				// issueCard($competitoe, "from", "to");
 			}
 		}
 	} // end issue competitors card //
 
-	// RE-ISSUE COMPETITORS CARD //
-	if ($function == "competitor_issue_card") {
+	// REPLACE COMPETITORS CARD //
+	if ($function == "competitor_replace_card") {
 		$competitor = MyActiveRecord::FindById(T_COMPETITORS, $_POST["competitor_id"]);
 		if ($competitor !== false) {
 			$card = getCard($competitor);
-			if ($card === false || ($card !== false && !validCard($card))) {
-				// Cannot re issue as dont have a card or it has expired, user should issue a new one
-
-				// // Competitor does not have a card or their current card is no longer valid.
-				// $newCard = MyActiveRecord::Create(T_CARDS);
-				// $newCard->competitors_id = $competitor->id;
-				// $newCard->cardstatus_id = getCardStatusId(CS_VALID);
-				// $newCard->validfrom = ""; // get from post.
-				// $newCard->validuntil = ""; // get from post.
-				// setCardReferredAs($newCard, $competitor);
-				// $newCard->save();
+			if ($card === false) {
+				$errMessages["nocard"] = "{$competitor->referred_as} does not have a card.";
+			} else if (!validCard($card)) {
+				$errMessages["expiredcard"] = "{$competitor->referred_as}'s last card is not valid and cannot be replaced.";
 			} else {
-				// Previous card need to be found and status changed to cancelled.
-				// issue a new card.
+				// Previous card is valid so need to cancel that card, 
+				// create a new one 
+				// and move card fixture links from last card to new one.
 				cancelCard($card);
+				$newCard = issueCard();
 				//TODO: finish
 			}
 		}

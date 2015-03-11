@@ -11,7 +11,7 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 			$local_attrib = substr($key_REQUEST,6);
 			//if ($key_REQUEST == "input_id")
 			{
-			$this_obj->$local_attrib = $value_REQUEST;
+				$this_obj->$local_attrib = $value_REQUEST;
 			}
 			
 		}
@@ -23,6 +23,7 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 	// -- Logic for individual classes updates
 	if ($class_obj == T_FIXTURES) {
 		// Check for clashing fixtures, prevent saving these.
+		setCardReferredAs($this_obj);
 	}
 	if ($class_obj == T_TEAMS) {
 		// Check for clashing team names, prevent saving these.
@@ -37,7 +38,7 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 		// $stopSave = true;
 	}
 	if ($class_obj == T_CARDS) {
-		
+		setCardReferredAs($this_obj);
 	}
 	// -- End Logic for individual classes.
 

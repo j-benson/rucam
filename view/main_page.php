@@ -1,7 +1,7 @@
 <?
 function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages) {
 	if (hasErrors($errMessages)) {
-		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
+		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&err_messages=".serialize($errMessages)."';</script>";
 	} else {
 		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
 	}
@@ -43,12 +43,6 @@ function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMe
 				// Redirects the page to show last added record.
 
 				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
-			// 	if (hasErrors($errMessages)) {
-			// 		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_error=".serialize($errMessages)."';</script>";
-			// 		//showErrorMsg(".errorStr($errMessages).")</script>";
-			// 	} else {
-			// 		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_create=".$last_inserted_record."';</script>";
-			// 	}
 			}
 
 			if ($mode == "update")
@@ -67,11 +61,6 @@ function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMe
 				include "controller/controller_update.php";
 				
 				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
-				// if (hasErrors($errMessages)) {
-				// 	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
-				// } else {
-				// 	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
-				// }
 				
 			}
 

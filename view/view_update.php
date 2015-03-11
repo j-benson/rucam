@@ -12,9 +12,9 @@
 	{
 		post_update_message($_REQUEST['post_update'],$here);
 	}
-	if (isset($_REQUEST['post_error']))
+	if (isset($_REQUEST['err_messages']))
 	{
-		post_update_error_message($_REQUEST['post_error'],$here);
+		post_update_error_message($_REQUEST['err_messages'],$here);
 	}
 	////
 	
@@ -134,11 +134,11 @@
 		echo "<tr><th colspan='3'>Team Member Cards</th></tr>";
 		
 		echo "<tr><td>Valid From</td>";
-		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='2015-03-11' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td>Valid Until</td>";
-		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='2015-03-18' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td></td><td><input type='submit' value='Issue Cards' /></td>";
@@ -185,8 +185,6 @@
 			
 		}
 		echo "<tr><td colspan='2'><input type='submit' value='Add Authorisation'/></td></tr>";
-		//echo "<tr><td colspan='2'><span style='font-size:10px;'>Fixtures that this team is playing in are highlighted bold.</span></td></tr>";
-		
 		echo "</form>";
 		echo "</table>";
 		echo "<div style='font-size:12px; font-weight:bold; width:100%; text-align:center;'>Fixtures that this team are participating in have been highlighted bold.</div>";

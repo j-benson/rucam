@@ -33,6 +33,7 @@
 	define(CS_CANCELLED, "Cancelled");
 	///
 
+	$messages = array();
 	$errMessages = array();
 	
 	// relationships between entities/classes are named below: if no name has
@@ -210,6 +211,15 @@
 	}
 
 	/**
+	 * Checks whether there are any messages.
+	 * @param $messageArray The array holding the messages.
+	 * @return True when there are messages, false when not.
+	 */
+	function hasMessages($messageArray) {
+		return count($messageArray) > 0;
+	}
+
+	/**
 	 * Checks whether a given card is valid or not. If a card is not valid and its status is
 	 * still valid this will update the status to exired.
 	 * @param $card The MyActiveRecord object for the card.
@@ -248,7 +258,10 @@
 	 * @param $card The card object to set the referred_as field for.
 	 * @param $competitor The competitor object that this card links to.
 	 */
-	function setCardReferredAs(&$card, $competitor) {
+	function setCardReferredAs(&$card, $competitor = null) {
+		if ($competitor == null) {
+			$competitor = MyActiveRecord::FindById(T_COMPETITORS, $card->competitors_id);
+		}
 		$card->referred_as = $competitor->referred_as . " (" . $card->find_parent(T_CARDSTATUS)->referred_as . ")";
 	}
 
@@ -266,7 +279,7 @@
 	 * @return Array of competitor objects.
 	 */
 	function getCompetitorsInTeam($teamId) {
-		return MyActiveRecord::FindById(T_TEAMS, $class_obj_id)->find_children(T_COMPETITORS);
+		return MyActiveRecord::FindById(T_TEAMS, $teamId)->find_children(T_COMPETITORS);
 	}
 
 	/**
@@ -276,7 +289,7 @@
 	 */
 	function getCard($competitor) {
 		// if the competitor has muliple cards choose the newest (valid from)
-		return MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$competitor->id, "validfrom DESC");
+		return MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$competitor->id, "id DESC");
 	}
 
 	/**
@@ -284,8 +297,11 @@
 	 * @param $competitor The competitor object to find the related card and expire.
 	 * @param $validfrom The date the card is valid from.
 	 * @param $validuntil The date the card is valid until.
+	 * @return The object of the new card that was created, or false on failure.
 	 */
 	function issueCard($competitor, $validfrom, $validuntil) {
+		$newCard = false;
+
 		if ($competitor !== false) {
 			$newCard = MyActiveRecord::Create(T_CARDS);
 			$newCard->competitors_id = $competitor->id;
@@ -295,6 +311,8 @@
 			setCardReferredAs($newCard, $competitor);
 			$newCard->save();
 		}
+
+		return $newCard;
 	}
 
 	/**
@@ -304,7 +322,8 @@
 	function expireCard($competitor) {
 		$card = getCard($competitor);
 		if ($card !== false) {
-			$card->cardstatus_id = getCardStatusId(CS_EXPIRE); 
+			$card->cardstatus_id = getCardStatusId(CS_EXPIRED);
+			setCardReferredAs($card, $competitor);
 			$card->save();
 		}
 	}
@@ -316,7 +335,24 @@
 	function cancelCard($card) {
 		if ($card !== false) {
 			$card->cardstatus_id = getCardStatusId(CS_CANCELLED); 
+			setCardReferredAs($card);
 			$card->save();
 		}
+	}
+
+	function compareRecord($rec1, $rec2) {
+		// rec1 and rec2 must be same type ie card and card
+		$cKeys = count($rec1);
+		$cMatches = 0;
+		foreach ($rec1 as $key => $val) {
+			if ($key != "id") {
+				if ($val === $rec->key) {
+					// looking at same variable in both objects
+					// are their values the same.
+					++$cMatches;
+				}
+			}
+		}
+		return $cKeys == $cMatches;
 	}
 ?>

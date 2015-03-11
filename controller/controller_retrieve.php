@@ -1,7 +1,7 @@
 <?
 	// this is a hybrid controller/view file
 	// to be amended in future versions of VF1
-		
+
 	if ($mode != "confirm_search") 
 	{
 ?>	
@@ -63,6 +63,12 @@
 
 	foreach ($obj_class as $obj_key => $obj_value)
 	{
+		// UPDATE CARD STATUS //
+		if ($class_value == T_CARDS) {
+			validCard($obj_value);
+		}
+
+
 		echo "<tr>";
 		foreach (MyActiveRecord::Columns($class_value) as $obj_attribute => $obj_attr_value)
 		{
@@ -304,6 +310,12 @@
 
 	foreach ($obj_class as $obj_key => $obj_value)
 	{
+		// UPDATE CARD STATUS //
+		if ($class_value == T_CARDS) {
+			validCard($obj_value);
+		}
+
+		
 		echo "<tr>";
 		foreach (MyActiveRecord::Columns($class_value) as $obj_attribute => $obj_attr_value)
 		{
