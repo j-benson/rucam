@@ -1,4 +1,13 @@
 <?
+function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages) {
+	if (hasErrors($errMessages)) {
+		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
+	} else {
+		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
+	}
+}
+
+
 	foreach ($classes as $class_key => $class_value)
 	{
 		if ($here == $class_value)
@@ -33,12 +42,13 @@
 				// echo "<script>alert('".$here." ".$_REQUEST['input_referred_as']." has been created');</script>";
 				// Redirects the page to show last added record.
 
-				if (hasErrors($errMessages)) {
-					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_error=".serialize($errMessages)."';</script>";
-					//showErrorMsg(".errorStr($errMessages).")</script>";
-				} else {
-					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_create=".$last_inserted_record."';</script>";
-				}
+				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+			// 	if (hasErrors($errMessages)) {
+			// 		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_error=".serialize($errMessages)."';</script>";
+			// 		//showErrorMsg(".errorStr($errMessages).")</script>";
+			// 	} else {
+			// 		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here."&post_create=".$last_inserted_record."';</script>";
+			// 	}
 			}
 
 			if ($mode == "update")
@@ -56,16 +66,18 @@
 				
 				include "controller/controller_update.php";
 				
-				if (hasErrors($errMessages)) {
-					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
-				} else {
-					echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
-				}
+				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+				// if (hasErrors($errMessages)) {
+				// 	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_error=".serialize($errMessages)."';</script>";
+				// } else {
+				// 	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
+				// }
 				
 			}
-			
+
 			if ($mode == "update_function") {
 				include "controller/controller_update_functions.php";
+				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
 			}
 
 			// cheeky hack!

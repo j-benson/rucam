@@ -120,37 +120,43 @@
 		}
 	}
 	
-	echo "<tr><td><td><input type=button value='Update ".singularName($here, true)."' onClick=javascript:confirm_update('update_".$here."')><td><input type=reset></table></form>";
+	echo "<tr><td></td><td><input type='button' value='Update ".singularName($here, true)."' onClick=\"javascript:confirm_update('update_".$here."')\" /></td><td><input type=reset></td></table></form>";
 	
 
-	/// WHOLE TEAM AUTHORISATION ///
+	
 	if ($class_value == T_TEAMS) {
-		// Find the competitors belonging to this team.
-		// $teamObj = MyActiveRecord::FindById($class_value, $class_obj_id);
-		// $competitorsObj = $teamObj->find_children(T_COMPETITORS);
-		// $comIds = array();
-		// foreach ($competitorsObj as $com) {
-		// 	array_push($comIds, $com->id);
-		// }
-		// All the cards in the team
-		// var_dump("SELECT * FROM ".T_CARDS." WHERE competitors_id IN (SELECT id FROM ".T_COMPETITORS." WHERE teams_id=".$class_obj_id.")");
-		// $cardsObj = MyActiveRecord::FindBySql(T_CARDS, "SELECT * FROM ".T_CARDS." WHERE competitors_id IN (SELECT id FROM ".T_COMPETITORS." WHERE teams_id=".$class_obj_id.")");
-		// var_dump($cardsObj);
-		// // Get list of card ids to compare to fixures.
-		// $cardIds = array();
-		// foreach ($cardsObj as $ca) {
-		// 	array_push($cardIds, $ca->id);
-		// }
-
 		// Competitors in the team
 		$competitors = MyActiveRecord::FindById(T_TEAMS, $class_obj_id)->find_children(T_COMPETITORS);
+		
+		/// WHOLE TEAM ISSUE CARDS ///
+		echo "<table class='table1'>";
+		echo "<form method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_issue_cards&class_obj_id=".$class_obj_id."' >";
+		echo "<tr><th colspan='3'>Team Member Cards</th></tr>";
+		
+		echo "<tr><td>Valid From</td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
+
+		echo "<tr><td>Valid Until</td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
+
+		echo "<tr><td></td><td><input type='submit' value='Issue Cards' /></td>";
+		echo "<td><input type='button' class='redText' value='Expire All Cards' onClick=\"javascript:confirm_expire_all_cards('team_expire_cards')\" /></td></tr>";
+
+		echo "</form>";
+		echo "</table>";
+
+		echo "<form id='team_expire_cards' method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_expire_cards&class_obj_id=".$class_obj_id."' ></form>";
+
+		/// WHOLE TEAM AUTHORISATION ///
 		$numCompetitors = count($competitors);
 		$cardIds = array();
 		foreach ($competitors as $c) {
 			// find first most recent card
 			$card = MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$c->id, "validfrom DESC");
 			// if card found add its id to array
-			if ($card !== false) {
+			if ($card !== false && validCard($card)) {
 				array_push($cardIds, $card->id);
 			}
 		}
@@ -158,7 +164,7 @@
 		$fixturesObj = MyActiveRecord::FindAll(T_FIXTURES, null, "datetime");
 
 		echo "<table class='table1'>";
-		echo "<form method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_auth&class_obj_id=".$class_obj_id."' >";
+		echo "<form method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_link_cards&class_obj_id=".$class_obj_id."' >";
 		echo "<tr><th colspan='2'>Team Fixture Authorisation</th></tr>";
 		foreach ($fixturesObj as $fix) {
 			$numCards = 0;
@@ -183,6 +189,6 @@
 		
 		echo "</form>";
 		echo "</table>";
-		echo "<div style='font-size:12px; font-weight:bold; margin-left:20px;'>Fixtures that this team are participating in are highlighted bold.</div>";
+		echo "<div style='font-size:12px; font-weight:bold; width:100%; text-align:center;'>Fixtures that this team are participating in have been highlighted bold.</div>";
 	}
 ?>

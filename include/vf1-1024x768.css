@@ -264,6 +264,17 @@ li{
 		color: #6666DD;		/* yellow */
 		background: #EEEEDD;     /* DDDDAA: light gold; 999999: dark grey  */
 	}
+
+.post_error {
+	font-size: 14pt;
+	color: red;		/* yellow */
+	background: #EEEEDD; 
+}
+
+.p_errmessage {
+	font-size: 10pt;
+	
+}
 	
 
 	
@@ -367,3 +378,7 @@ input[readonly='true']
 		float: left;
 		padding: 2px 0 6 6;
 	}
+
+.redText {
+	color: red;
+}

@@ -28,25 +28,25 @@
 
 	function post_create_error_message($urlPostVar, $classino)
 	{
-		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not created.</p>';
+		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' Not Created</p>';
 		echo showMessagesList($urlPostVar);
 		echo "</div>";
 	}
 
 	function post_update_error_message($urlPostVar, $classino)
 	{
-		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' was not updated.</p>';
+		echo '<div class="post_error"><p>'.singularName(niceName($classino, $classino)).' Not Updated</p>';
 		echo showMessagesList($urlPostVar);
 		echo "</div>";
 	}
 
 	function showMessagesList($urlPostVar) {
-		$str = "<ul>";
+		$str = "";
 		$messages = unserialize($urlPostVar);
 		foreach ($messages as $m) {
-			$str .= '<li>'. $m .'</li>';
+			$str .= '<p class="p_errmessage">'. $m .'</p>';
 		}
-		return $str."</ul>";
+		return $str;
 	}
 
 ?>

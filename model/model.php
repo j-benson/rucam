@@ -26,9 +26,11 @@
 	define(T_CARDS, "cards");
 	define(T_CARDSTATUS, "cardstatus");
 	define(T_CARDS_FIXTURES, "cards_fixtures");
+	define(T_VENUES, "venues");
 	/// CARD STATUSES ///
 	define(CS_VALID, "Valid");
 	define(CS_EXPIRED, "Expired");
+	define(CS_CANCELLED, "Cancelled");
 	///
 
 	$errMessages = array();
@@ -211,6 +213,7 @@
 	 * Checks whether a given card is valid or not. If a card is not valid and its status is
 	 * still valid this will update the status to exired.
 	 * @param $card The MyActiveRecord object for the card.
+	 * @return True if the card is valid and false if not.
 	 */
 	function validCard($card) {
 		
@@ -221,11 +224,99 @@
 		if ($cardstatus->referred_as != CS_VALID || $curdate > $validuntildate) {
 			// update the status to expired only if it was valid
 			if ($cardstatus->referred_as == CS_VALID) {
-				$card->cardstatus_id = MyActiveRecord::FindFirst(T_CARDSTATUS, "referred_as='".CS_EXPIRED."'")->id;
+				//$card->cardstatus_id = MyActiveRecord::FindFirst(T_CARDSTATUS, "referred_as='".CS_EXPIRED."'")->id;
+				$card->cardstatus_id = getCardStatusId(CS_EXPIRED);
 				$card->save();
 			}
 			return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Gets the ID of a given card status.
+	 * @param $statusStr The string value of the card status as it is in the database.
+	 * @return The ID of that card status.
+	 */
+	function getCardStatusId($statusStr) {
+		return MyActiveRecord::FindFirst(T_CARDSTATUS, "referred_as='".$statusStr."'")->id;
+	}
+
+	/**
+	 * Sets the value of the referred_as field for cards.
+	 * Pre-condition: Requires the card's status to be set before calling this method.
+	 * @param $card The card object to set the referred_as field for.
+	 * @param $competitor The competitor object that this card links to.
+	 */
+	function setCardReferredAs(&$card, $competitor) {
+		$card->referred_as = $competitor->referred_as . " (" . $card->find_parent(T_CARDSTATUS)->referred_as . ")";
+	}
+
+	/**
+	 * Sets the value of the referred_as field for fixtures.
+	 * @param $fixture The fixture object to set the referred_as field for.
+	 */
+	function setFixtureReferredAs(&$fixture) {
+		$fixture->referred_as = $fixture->home_teams_id . " vs " . $fixture->away_teams_id . " at " . $fixture->find_parent(T_VENUES)->referred_as . " on " . $fixture->datetime;
+	}
+
+	/**
+	 * Gets all the competitors in a given team.
+	 * @param $teamId The ID of the team.
+	 * @return Array of competitor objects.
+	 */
+	function getCompetitorsInTeam($teamId) {
+		return MyActiveRecord::FindById(T_TEAMS, $class_obj_id)->find_children(T_COMPETITORS);
+	}
+
+	/**
+	 * Gets a card belonging to a competitor.
+	 * @param $competitor The competitor object to find the related card for.
+	 * @return The card belonging to the given competitor.
+	 */
+	function getCard($competitor) {
+		// if the competitor has muliple cards choose the newest (valid from)
+		return MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$competitor->id, "validfrom DESC");
+	}
+
+	/**
+	 * Issues a card to a competitor.
+	 * @param $competitor The competitor object to find the related card and expire.
+	 * @param $validfrom The date the card is valid from.
+	 * @param $validuntil The date the card is valid until.
+	 */
+	function issueCard($competitor, $validfrom, $validuntil) {
+		if ($competitor !== false) {
+			$newCard = MyActiveRecord::Create(T_CARDS);
+			$newCard->competitors_id = $competitor->id;
+			$newCard->cardstatus_id = getCardStatusId(CS_VALID);
+			$newCard->validfrom = $validfrom;
+			$newCard->validuntil = $validuntil;
+			setCardReferredAs($newCard, $competitor);
+			$newCard->save();
+		}
+	}
+
+	/**
+	 * Expires a card belonging to a competitor.
+	 * @param $competitor The competitor object to find the related card and expire.
+	 */
+	function expireCard($competitor) {
+		$card = getCard($competitor);
+		if ($card !== false) {
+			$card->cardstatus_id = getCardStatusId(CS_EXPIRE); 
+			$card->save();
+		}
+	}
+
+	/**
+	 * Cancels a card belonging to a competitor.
+	 * @param $card The card object to cancel.
+	 */
+	function cancelCard($card) {
+		if ($card !== false) {
+			$card->cardstatus_id = getCardStatusId(CS_CANCELLED); 
+			$card->save();
+		}
 	}
 ?>
