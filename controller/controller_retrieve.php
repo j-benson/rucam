@@ -1,9 +1,7 @@
 <?
 	// this is a hybrid controller/view file
 	// to be amended in future versions of VF1
-	
-	
-	
+		
 	if ($mode != "confirm_search") 
 	{
 ?>	
@@ -36,7 +34,7 @@
 				}
 			}
 	
-	
+		
 			foreach ($join_tables as $jt_key => $jt_value)
 			{
 				$pos = strpos($jt_value,$here);
@@ -47,8 +45,8 @@
 								
 					$there = str_replace("_","",$jt_value);
 					$there = str_replace($here,"",$there);
-					
-					echo "<th>associated ".$there."</th>";
+
+					echo "<th>".joinName($here, $there)."</th>";
 					//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
 					//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
 					//include "view_displayjt.php";
@@ -68,7 +66,7 @@
 		echo "<tr>";
 		foreach (MyActiveRecord::Columns($class_value) as $obj_attribute => $obj_attr_value)
 		{
-			// Now create the table columns but not the referred_as column if defined as hidden.
+			// LEAVE AT TOP - Now create the table columns but not the referred_as column if defined as hidden.
 			if ($obj_attribute == "referred_as" && hiddenReferredAs($class_value)) {
 				continue;
 			}
@@ -80,7 +78,7 @@
 			}
 			else if (strlen($obj_attribute)> 2 && !(strpos($obj_attribute,"_id")===false))
 			{
-				// FORGEIGN KEYS
+				// FOREIGN KEYS
 				$related_class = find_relatedclass($obj_attribute,$foreign_keys);
 				//echo " related_class = ".$related_class;
 				//echo " obj_attribute = ".$obj_attribute;
@@ -94,7 +92,7 @@
 				echo "<td>".$obj_value->$obj_attribute."</td>";
 			}
 		} // end foreach of result row
-		
+
 		//////
 		
 		foreach ($join_tables as $jt_key => $jt_value)
@@ -103,28 +101,19 @@
 			if($pos === false) {
 							// string needle NOT found in haystack
 			}
-			else {		// string needle found in haystack
-							
+			else {		// string needle found in haystack	
 				$there = str_replace("_","",$jt_value);
 				$there = str_replace($here,"",$there);
 				// $there = the other table this table ($here) links to 
 				// ie if the join table is 'here_there' or 'there_here' when $here is 'here' $there will be 'there' 
 				
+				// $obj_value is the MyActiveRecord obj of the current class.
 				echo "<td>";
-				$i = 0;
 				foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
 				{
-					if ($i == 0)
-					{
-					echo " ".$_favalue->referred_as;
-					$i++;
-					}
-					else
-					{
-					echo ", ".$_favalue->referred_as;
-					$i++;
-					}
+					echo $_favalue->referred_as."<br/>";
 				}
+				echo "</td>";
 				
 				//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
 				//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
@@ -190,7 +179,7 @@
 			$there = str_replace("_","",$jt_value);
 			$there = str_replace($here,"",$there);
 			
-			echo "<th>associated ".$there."</th>";
+			echo "<th>".joinName($here, $there)."</th>";
 			//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
 			//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";
 			//include "view_displayjt.php";
@@ -312,7 +301,7 @@
 	//echo "<p>".$strSQLsearch;
 	
 	$obj_class = MyActiveRecord::FindBySql($class_value, $strSQLsearch);
-	
+
 	foreach ($obj_class as $obj_key => $obj_value)
 	{
 		echo "<tr>";
@@ -343,6 +332,7 @@
 		
 				//////
 		
+		/// For the Associated column
 		foreach ($join_tables as $jt_key => $jt_value)
 		{
 			$pos = strpos($jt_value,$here);
@@ -355,20 +345,11 @@
 				$there = str_replace($here,"",$there);
 				
 				echo "<td>";
-				$i = 0;
 				foreach ($obj_value->find_attached($there) as $_fakey => $_favalue)
 				{
-					if ($i == 0)
-					{
-					echo " ".$_favalue->referred_as;
-					$i++;
-					}
-					else
-					{
-					echo ", ".$_favalue->referred_as;
-					$i++;
-					}
+					echo $_favalue->referred_as . "<br/>";
 				}
+				echo "</td>";
 				
 				//echo "<script>document.getElementById('div_right').style.height = '230px';document.getElementById('div_right').style.border = 'none';</script><div id=div3>";
 				//echo "<p class=p1>manage the ".$jt_value." relationship by the following criterion: ";

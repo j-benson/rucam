@@ -35,7 +35,9 @@
 		// $stopSave = true;
 	}
 	if ($class_obj == "cards") {
-		
+		// echo "<pre>"; var_dump($_POST); echo "</pre>";
+		// echo "<pre>";var_dump($pino); echo "</pre>";
+		// die;
 	}
 	if ($class_obj == "authorisation") {
 		//$pino['cards_id']

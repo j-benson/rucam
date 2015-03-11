@@ -21,28 +21,23 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 	$stopSave = false;
 
 	// -- Logic for individual classes updates
-	if ($class_obj == "fixtures") {
+	if ($class_obj == T_FIXTURES) {
 		// Check for clashing fixtures, prevent saving these.
 	}
-	if ($class_obj == "teams") {
+	if ($class_obj == T_TEAMS) {
 		// Check for clashing team names, prevent saving these.
 	}
-	if ($class_obj == "competitors") {
+	if ($class_obj == T_COMPETITORS) {
 		// when inserting new competitor, check for fixtures and add authorisation for those fixtures.
 		// update their card and authorisations
 
 		// TESTING force error.
-		$errMessages["referred_as"] = "This nation already exists.";
-		$errMessages["nickname"] = "Nick name was not filled in.";
-		$stopSave = true;
+		// $errMessages["referred_as"] = "This nation already exists.";
+		// $errMessages["nickname"] = "Nick name was not filled in.";
+		// $stopSave = true;
 	}
-	if ($class_obj == "cards") {
+	if ($class_obj == T_CARDS) {
 		
-	}
-	if ($class_obj == "authorisation") {
-		//$pino['cards_id']
-		// Card must be valid
-		// 
 	}
 	// -- End Logic for individual classes.
 
