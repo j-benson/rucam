@@ -36,7 +36,7 @@ div
 	{
 		float:left;
 		width: 100%;
-		min-height: 400px;
+		/*height: 400px; */
 		bottom: 60;
 		/* position: absolute; */
 		/* top: 72; */
@@ -73,7 +73,7 @@ div
 		width:100%;
 		background:#DEEFD8;
 		min-height: 200;
-		/*height:800px; GRRRR */
+		height:800px;
 		/*border-bottom: solid #111 1px;*/
 	}
 
