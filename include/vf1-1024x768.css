@@ -163,6 +163,7 @@ h2
 /*		border: 3px solid #FFFF55;	yellow */
 		color: #FFF;
 		font-family:Tahoma, Geneva, sans-serif;
+		min-height: 50px;
 	}
 	
 p
