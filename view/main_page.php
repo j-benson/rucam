@@ -1,10 +1,22 @@
 <?
-function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages) {
+function redirectCreateWithErrorCheck($current_file_name, $here, $last_inserted_record, $errMessages) {
+	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=create&class_obj=".$here;
 	if (hasErrors($errMessages)) {
-		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&err_messages=".serialize($errMessages)."';</script>";
+		echo "&err_messages=".serialize($errMessages);
 	} else {
-		echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id."&post_update=".$class_obj_id."';</script>";
+		echo "&post_create=".$last_inserted_record;
 	}
+	echo "'</script>";
+}
+
+function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages) {
+	echo "<script>this.location = '".$current_file_name."?here=".$here."&mode=update&class_obj_id=".$class_obj_id;
+	if (hasErrors($errMessages)) {
+		echo "&err_messages=".serialize($errMessages);
+	} else {
+		echo "&post_update=".$class_obj_id;
+	}
+	echo "'</script>";
 }
 
 
@@ -41,8 +53,7 @@ function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMe
 				include "controller/controller_create.php";
 				// echo "<script>alert('".$here." ".$_REQUEST['input_referred_as']." has been created');</script>";
 				// Redirects the page to show last added record.
-
-				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+				redirectCreateWithErrorCheck($current_file_name, $here, $last_inserted_record, $errMessages);
 			}
 
 			if ($mode == "update")
@@ -57,16 +68,15 @@ function redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMe
 
 			if ($mode == "confirm_update")
 			{
-				
 				include "controller/controller_update.php";
-				
-				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+				redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
 				
 			}
 
-			if ($mode == "update_function") {
+			if ($mode == "update_function") 
+			{
 				include "controller/controller_update_functions.php";
-				redirectWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+				redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
 			}
 
 			// cheeky hack!
