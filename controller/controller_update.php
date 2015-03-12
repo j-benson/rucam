@@ -23,22 +23,89 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 	// -- Logic for individual classes updates
 	if ($class_obj == T_FIXTURES) {
 		// Check for clashing fixtures, prevent saving these.
-		setCardReferredAs($this_obj);
+		if ($this_obj->home_teams_id == "") {
+			$errMessages["home_teams_id"] = "The Home Team must be filled in.";
+		}
+		if ($this_obj->away_teams_id == "") {
+			$errMessages["away_teams_id"] = "The Away Team must be filled in.";
+		}
+		if ($this_obj->venues_id == "") {
+			$errMessages["venues_id"] = "The Venue must be filled in.";
+		}
+		if ($this_obj->datetime == "") {
+			$errMessages["datetime"] = "The Datetime must be filled in.";
+		}
+		if (hasErrors($errMessages)) { $stopSave = true; }
+		
+		if (!$stopSave) {
+			setCardReferredAs($this_obj);
+		}
 	}
 	if ($class_obj == T_TEAMS) {
 		// Check for clashing team names, prevent saving these.
+		if ($this_obj->referred_as == "") {
+			$errMessages["referred_as"] = "The Nation must be filled in.";
+		}
+		if ($this_obj->controlledby == "") {
+			$errMessages["controlledby"] = "The Controlled By must be filled in.";
+		}
+		if ($this_obj->acronym == "") {
+			$errMessages["acronym"] = "The Acronym must be filled in.";
+		}
+		if ($this_obj->nickname == "") {
+			$errMessages["nickname"] = "The Nickname must be filled in.";
+		}
+		if (hasErrors($errMessages)) { $stopSave = true; }
+
+		if (!$stopSave && existingRecord(T_TEAMS, $this_obj)) {
+			$stopSave = true;
+			$errMessages["existing"] = "The team entered already exists.";
+		}
 	}
 	if ($class_obj == T_COMPETITORS) {
 		// when inserting new competitor, check for fixtures and add authorisation for those fixtures.
 		// update their card and authorisations
+		if ($this_obj->titles_id == "") {
+			$errMessages["titles_id"] = "The Title must be filled in.";
+		}
+		if ($this_obj->referred_as == "") {
+			$errMessages["referred_as"] = "The Name must be filled in.";
+		}
+		if ($this_obj->role == "") {
+			$errMessages["role"] = "The Role must be filled in.";
+		}
+		if ($this_obj->teams_id == "") {
+			$errMessages["teams_id"] = "The Team must be filled in.";
+		}
+		if (hasErrors($errMessages)) { $stopSave = true; }
 
-		// TESTING force error.
-		// $errMessages["referred_as"] = "This nation already exists.";
-		// $errMessages["nickname"] = "Nick name was not filled in.";
-		// $stopSave = true;
+		if (!$stopSave && existingRecord(T_COMPETITORS, $this_obj)) {
+			$stopSave = true;
+			$errMessages["existing"] = "The team entered already exists.";
+		}
 	}
 	if ($class_obj == T_CARDS) {
-		setCardReferredAs($this_obj);
+		if ($this_obj->competitors_id == "") {
+			$errMessages["competitors_id"] = "The Competitor must be filled in.";
+		}
+		if ($this_obj->cardstatus_id == "") {
+			$errMessages["cardstatus_id"] = "The Card Status must be filled in.";
+		}
+		if ($this_obj->validfrom == "") {
+			$errMessages["validfrom"] = "The Valid From must be filled in.";
+		}
+		if ($this_obj->validuntil == "") {
+			$errMessages["validuntil"] = "The Valid Until must be filled in.";
+		}
+		if (hasErrors($errMessages)) { $stopSave = true; }
+
+		if (!validCardDates($this_obj->validfrom, $this_obj->validuntil, $errMessages)) {
+			$stopSave = true;
+		}
+
+		if (!$stopSave) {
+			setCardReferredAs($this_obj);
+		}
 	}
 	// -- End Logic for individual classes.
 

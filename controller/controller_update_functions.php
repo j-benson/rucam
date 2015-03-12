@@ -73,11 +73,8 @@
 		
 		// Check until date is after from date
 		if ($issueCard) {
-			$from = new DateTime($validfromStr);
-			$until = new DateTime($validuntilStr);
-			if ($from > $until) {
+			if (!validCardDates($validfromStr, $validuntilStr, $errMessages)) {
 				$issueCard = false;
-				$errMessages["dateorder"] = "The Valid From date must be before the Valid Until date.";
 			}
 		}
 

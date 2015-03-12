@@ -342,11 +342,11 @@
 
 	function compareRecord($rec1, $rec2) {
 		// rec1 and rec2 must be same type ie card and card
-		$cKeys = count($rec1);
+		$cKeys = count(get_object_vars($rec1)) - 1; // -1 as ignoring the ID field
 		$cMatches = 0;
 		foreach ($rec1 as $key => $val) {
 			if ($key != "id") {
-				if ($val === $rec->key) {
+				if ($val === $rec2->$key) {
 					// looking at same variable in both objects
 					// are their values the same.
 					++$cMatches;
@@ -354,5 +354,66 @@
 			}
 		}
 		return $cKeys == $cMatches;
+	}
+
+	function compareJoinRecord($rec1, $rec2) {
+		$fkCount = 0;
+		$fkMatches = 0;
+		foreach ($rec1 as $var => $val) {
+			if (strlen($var)> 2 && !(strpos($var,"_id")===false)) {
+				// This a foreign key.
+				// When comparing join table records only compare the foreign keys
+				++$fkCount;
+				if ($rec->$var == $val) {
+					++$fkMatches;
+				}
+			}
+		}
+		return $fkCount == $fkMatches;
+	}
+
+	/** 
+	 * Checks whether the given record in the given table already exists.
+	 * @param $table The name fo the table.
+	 * @param $newrecord The myactiverecord object of the record.
+	 * @return True if the record exists, false if not.
+	 */
+	function existingRecord($table, $newrecord) {
+		$allrecords = MyActiveRecord::FindAll($table);
+		if (in_array($table, $join_tables)) 
+		{
+			// JOIN TABLE
+			foreach ($allrecords as $rec) {
+				if ($compareJoinRecord($newrecord, $rec)) {
+					return true;
+				}
+			}
+			return false;
+		} else {
+			// OTHER TABLES
+			foreach ($allrecords as $r) {
+				if (compareRecord($newrecord, $r)) {
+					return true;
+				}
+			}
+			return false;
+		}
+	}
+
+	function validCardDates($validfromStr, $validuntilStr, &$errMessages) {
+		$validDates = true;
+		$from = date_create($validfromStr);
+		$until = date_create($validuntilStr);
+		if ($from == false || $until == false) {
+			$validDates = false;
+			if ($from == false) { $errMessages["dateinvalid_from"] = "Valid From is an invalid date. Use format YYYY-MM-DD."; }
+			if ($until == false) { $errMessages["dateinvalid_until"] = "Valid Until is an invalid date. Use format YYYY-MM-DD."; }
+		} else {
+			if ($from > $until) {
+				$validDates = false;
+				$errMessages["dateorder"] = "The Valid From date must be before the Valid Until date.";
+			}
+		}
+		return $validDates;
 	}
 ?>

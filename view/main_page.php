@@ -79,7 +79,6 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 				redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
 			}
 
-			// cheeky hack!
 			if ($mode == "confirm_search")
 			{
 				$mode = "search";
