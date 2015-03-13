@@ -20,6 +20,11 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 }
 
 
+if ($here == "") {
+	/// MAIN PAGE ///
+	include "view/view_main.php";
+
+} else {
 	foreach ($classes as $class_key => $class_value)
 	{
 		if ($here == $class_value)
@@ -34,7 +39,7 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 			}
 ?>
 
-</div> <!-- closes div2 from menu.php -->
+</div> <?php // closes div2 from menu.php ?>
 
 <?
 			if ($mode == "create")
@@ -128,5 +133,6 @@ if ($mode == "search" || $mode == "create" || $mode == "update")
 		}		//end $here == "class_value
 		
 	}	// end foreach ($classes as $class_key => $class_value)
+} // end else of $here == "" //
 ?>
 </div>

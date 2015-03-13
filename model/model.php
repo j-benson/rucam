@@ -227,7 +227,9 @@
 	 * @return True if the card is valid and false if not.
 	 */
 	function validCard($card) {
-		
+		if ($card === false) {
+			return false;
+		}
 		$curdateInfo = getDate(time());
 		$curdate = new DateTime("{$curdateInfo['year']}-{$curdateInfo['mon']}-{$curdateInfo['mday']}");
 		$validuntildate = new DateTime($card->validuntil);
@@ -271,7 +273,7 @@
 	 * @param $fixture The fixture object to set the referred_as field for.
 	 */
 	function setFixtureReferredAs(&$fixture) {
-		$fixture->referred_as = $fixture->home_teams_id . " vs " . $fixture->away_teams_id . " at " . $fixture->find_parent(T_VENUES)->referred_as . " on " . $fixture->datetime;
+		$fixture->referred_as = $fixture->find_parent(T_TEAMS, "home_teams_id")->referred_as . " vs " . $fixture->find_parent(T_TEAMS, "away_teams_id")->referred_as . " at " . $fixture->find_parent(T_VENUES)->referred_as . " on " . $fixture->date;
 	}
 
 	/**

@@ -163,7 +163,7 @@
 			}
 		}
 
-		$fixturesObj = MyActiveRecord::FindAll(T_FIXTURES, null, "datetime");
+		$fixturesObj = MyActiveRecord::FindAll(T_FIXTURES, null, "date DESC, time");
 
 		echo "<table class='table1'>";
 		echo "<form method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_link_cards&class_obj_id=".$class_obj_id."' >";

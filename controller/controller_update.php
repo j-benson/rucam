@@ -32,13 +32,16 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 		if ($this_obj->venues_id == "") {
 			$errMessages["venues_id"] = "The Venue must be filled in.";
 		}
-		if ($this_obj->datetime == "") {
-			$errMessages["datetime"] = "The Datetime must be filled in.";
+		if ($this_obj->date == "") {
+			$errMessages["date"] = "The Date must be filled in.";
+		}
+		if ($this_obj->time == "") {
+			$errMessages["time"] = "The Time must be filled in.";
 		}
 		if (hasErrors($errMessages)) { $stopSave = true; }
 		
 		if (!$stopSave) {
-			setCardReferredAs($this_obj);
+			setFixtureReferredAs($this_obj);
 		}
 	}
 	if ($class_obj == T_TEAMS) {

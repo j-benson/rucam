@@ -88,7 +88,8 @@ CREATE TABLE IF NOT EXISTS `fixtures` (
   `home_teams_id` int(11) NOT NULL,
   `away_teams_id` int(11) NOT NULL,
   `venues_id` int(11) NOT NULL,
-  `datetime` datetime NOT NULL,
+  `date` date NOT NULL,
+  `time` time NOT NULL,
   `referred_as` varchar (100) NOT NULL,
   PRIMARY KEY  (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=6 ;
@@ -191,9 +192,9 @@ TIME - hh:mm:ss
 DATETIME - 1998-01-02 00:00:00.000
 **/
 
-INSERT IGNORE INTO `fixtures` (`id`, `home_teams_id`, `away_teams_id`, `venues_id`, `datetime`, `referred_as`) VALUES
-(1, '1', '3', '1', '2015-09-18 20:00:00', 'England vs Fiji at Twickenham on 2015-09-18'),
-(2, '4', '3', '2', '2015-09-23 16:45:00', 'Australia vs Fiji at Millenium Stadium on 2015-09-23'),
-(3, '1', '2', '1', '2015-09-26 20:00:00', 'England vs Wales at Twickenham on 2015-09-26'),
-(4, '4', '5', '3', '2015-09-27 12:00:00', 'Australia vs Uruguay at Villa Park on 2015-09-27'),
-(5, '1', '4', '1', '2015-10-03 20:00:00', 'England vs Australia at Twickenham on 2015-10-03');
+INSERT IGNORE INTO `fixtures` (`id`, `home_teams_id`, `away_teams_id`, `venues_id`, `date`, `time`, `referred_as`) VALUES
+(1, '1', '3', '1', '2015-09-18', '20:00:00', 'England vs Fiji at Twickenham on 2015-09-18'),
+(2, '4', '3', '2', '2015-09-23', '16:45:00', 'Australia vs Fiji at Millenium Stadium on 2015-09-23'),
+(3, '1', '2', '1', '2015-09-26', '20:00:00', 'England vs Wales at Twickenham on 2015-09-26'),
+(4, '4', '5', '3', '2015-09-27', '12:00:00', 'Australia vs Uruguay at Villa Park on 2015-09-27'),
+(5, '1', '4', '1', '2015-10-03', '20:00:00', 'England vs Australia at Twickenham on 2015-10-03');

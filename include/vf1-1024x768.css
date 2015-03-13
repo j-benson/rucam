@@ -40,7 +40,12 @@ div
 	float:left;
 		width: 100%;
 }
-	
+
+.main_img {
+	width: 100%;
+	text-align: center;
+	padding:40px 0;
+}
 
 
 	
