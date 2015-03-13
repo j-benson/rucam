@@ -18,7 +18,10 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 	}
 	echo "';</script>";
 }
-
+	if ($mode == "request_access")
+	{
+		include "controller/controller_update_mainpage.php";
+	}
 
 	foreach ($classes as $class_key => $class_value)
 	{
@@ -95,7 +98,6 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 			}
 
 
-
 /*
 
 if ($mode == "search" || $mode == "create" || $mode == "update")
@@ -127,6 +129,6 @@ if ($mode == "search" || $mode == "create" || $mode == "update")
 <?
 		}		//end $here == "class_value
 		
-	}	// end foreach ($classes as $class_key => $class_value)
+	}	// end foreach ($classes as $class_key => $class_value
 ?>
 </div>
