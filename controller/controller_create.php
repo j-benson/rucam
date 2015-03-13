@@ -106,6 +106,20 @@
 			setCardReferredAs($this_obj);
 		}
 	}
+	if ($class_obj == T_VENUES) {
+		if ($this_obj->referred_as == "") {
+			$errMessages["referred_as"] = "The Venue must be filled in.";
+		}
+		if ($this_obj->town == "") {
+			$errMessages["town"] = "The Town must be filled in.";
+		}
+		if (hasErrors($errMessages)) { $stopSave = true; }
+
+		if (!$stopSave && existingRecord(T_VENUES, $this_obj)) {
+			$stopSave = true;
+			$errMessages["existing"] = "The venue entered already exists.";
+		}
+	}
 	// -- End Logic for individual classes.
 
 	if (!$stopSave) {

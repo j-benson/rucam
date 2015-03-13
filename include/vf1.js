@@ -36,11 +36,8 @@ function confirm_update(form_id)
 
 function confirm_expire_all_cards(form_id)
 {
-	if(confirm('Expire All Cards\nAre you sure you want to expire the cards for all the members belonging to this team?'))
+	if(confirm('Expire All Cards\nAre you sure you want to expire the cards for all the competitors belonging to this team?'))
 	{
 		document.getElementById(form_id).submit();
 	}
 }
-
-
-

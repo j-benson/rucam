@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS `cardstatus` (
   `id` int(11) NOT NULL auto_increment,
   `referred_as` varchar(100) collate utf8_unicode_ci NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
 
 -- --------------------------------------------------------
 
@@ -176,7 +176,8 @@ INSERT IGNORE INTO `competitors` (`id`, `titles_id`, `referred_as`, `role`, `tea
 
 INSERT IGNORE INTO `cardstatus` (`id`, `referred_as`) VALUES
 (1, 'Active'),
-(2, 'Expired');
+(2, 'Expired'),
+(3, 'Cancelled');
 
 INSERT IGNORE INTO `venues` (`id`, `referred_as`,`town`) VALUES
 (1, 'Twickenham', 'London'),
@@ -191,8 +192,8 @@ DATETIME - 1998-01-02 00:00:00.000
 **/
 
 INSERT IGNORE INTO `fixtures` (`id`, `home_teams_id`, `away_teams_id`, `venues_id`, `datetime`, `referred_as`) VALUES
-(1, '1', '3', '1', '2015-09-18 20:00:00', 'England vs Fiji on 2015-09-18 at Twickenham'),
-(2, '4', '3', '2', '2015-09-23 16:45:00', 'Australia vs Fiji on 2015-09-23 at Millenium Stadium'),
-(3, '1', '2', '1', '2015-09-26 20:00:00', 'England vs Wales on 2015-09-26 at Twickenham'),
-(4, '4', '5', '3', '2015-09-27 12:00:00', 'Australia vs Uruguay on 2015-09-27 at Villa Park'),
-(5, '1', '4', '1', '2015-10-03 20:00:00', 'England vs Australia on 2015-10-03 at Twickenham');
+(1, '1', '3', '1', '2015-09-18 20:00:00', 'England vs Fiji at Twickenham on 2015-09-18'),
+(2, '4', '3', '2', '2015-09-23 16:45:00', 'Australia vs Fiji at Millenium Stadium on 2015-09-23'),
+(3, '1', '2', '1', '2015-09-26 20:00:00', 'England vs Wales at Twickenham on 2015-09-26'),
+(4, '4', '5', '3', '2015-09-27 12:00:00', 'Australia vs Uruguay at Villa Park on 2015-09-27'),
+(5, '1', '4', '1', '2015-10-03 20:00:00', 'England vs Australia at Twickenham on 2015-10-03');

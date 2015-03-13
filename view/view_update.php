@@ -63,7 +63,7 @@
 						echo "selected";
 					}
 					
-					echo "  value='".$obj_attr_value->id."' >".$obj_attr_value->id." - ".$obj_attr_value->referred_as;
+					echo "  value='".$obj_attr_value->id."' >".$obj_attr_value->referred_as." [".$obj_attr_value->id."]";
 					
 					//echo "(".$wcolumns_key.")";
 					
@@ -121,7 +121,9 @@
 	}
 	
 	echo "<tr><td></td><td><input type='button' value='Update ".singularName($here, true)."' onClick=\"javascript:confirm_update('update_".$here."')\" /></td><td><input type=reset></td></table></form>";
-	
+	if ($there == T_FIXTURES) {
+		echo "<div style='font-size:12px; font-weight:bold; width:100%; text-align:center;'>Fixtures that this competitor is participating in have been highlighted bold.</div>";
+	}
 
 	
 	if ($class_value == T_TEAMS) {
@@ -134,15 +136,15 @@
 		echo "<tr><th colspan='3'>Team Member Cards</th></tr>";
 		
 		echo "<tr><td>Valid From</td>";
-		echo "<td><input type='text' id='validfrom' name='validfrom' value='2015-03-11' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td>Valid Until</td>";
-		echo "<td><input type='text' id='validuntil' name='validuntil' value='2015-03-18' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
 
-		echo "<tr><td></td><td><input type='submit' value='Issue Cards' /></td>";
-		echo "<td><input type='button' class='redText' value='Expire All Cards' onClick=\"javascript:confirm_expire_all_cards('team_expire_cards')\" /></td></tr>";
+		echo "<tr><td></td><td><input id='issuebtn' type='submit' value='Issue Cards' /></td>";
+		echo "<td><input id='expirebtn' form='team_expire_cards' type='submit' class='redText' value='Expire All Cards' /></td></tr>";
 
 		echo "</form>";
 		echo "</table>";
@@ -154,7 +156,7 @@
 		$cardIds = array();
 		foreach ($competitors as $c) {
 			// find first most recent card
-			$card = MyActiveRecord::FindFirst(T_CARDS, T_COMPETITORS."_id=".$c->id, "validfrom DESC");
+			$card = getCard($c);
 			// if card found add its id to array
 			if ($card !== false && validCard($card)) {
 				array_push($cardIds, $card->id);
@@ -179,14 +181,93 @@
 			// make bold if this fixture contains the team.
 			$bold = $fix->home_teams_id == $class_obj_id || $fix->away_teams_id == $class_obj_id;
 			echo "<tr><td>". ($bold?"<strong>":"") . $fix->referred_as;
-			echo "<br/>" . "(Competitors Currently Authorised: " . ($auths === false ? "0" : count($auths)) . "/". $numCompetitors . ")" . ($bold?"</strong>":""); 
+			echo "<br/>" . "(Competitors Authorised: " . ($auths === false ? "0" : count($auths)) . "/". $numCompetitors . ")" . ($bold?"</strong>":""); 
 			echo "</td>";
 			echo "<td><input name='fixtures[]' type='checkbox' value='". $fix->id ."' /></td></tr>";
 			
 		}
-		echo "<tr><td colspan='2'><input type='submit' value='Add Authorisation'/></td></tr>";
+		echo "<tr><td colspan='2'><input id='authbtn' type='submit' value='Add Authorisation'/></td></tr>";
 		echo "</form>";
 		echo "</table>";
 		echo "<div style='font-size:12px; font-weight:bold; width:100%; text-align:center;'>Fixtures that this team are participating in have been highlighted bold.</div>";
+
+		?>
+		<script>
+			document.getElementById('authbtn').addEventListener("click", function(e) {
+				if (!confirm('Authorise Competitors\nAre you sure you want to authorise all the competitors in this team to the selected fixtures?')) {
+					e.preventDefault();
+				}
+			});
+			document.getElementById('issuebtn').addEventListener("click", function(e) {
+				if (!confirm('Issue Cards\nAre you sure you want to issue cards for all the competitors in this team?')) {
+					e.preventDefault();
+				}
+			});
+			document.getElementById('expirebtn').addEventListener("click", function(e) {
+				if (!confirm('Expire Cards\nAre you sure you want to expire the cards for all the competitors in this team?')) {
+					e.preventDefault();
+				}
+			});
+		</script>
+		<?php
+	}
+
+	if ($class_value == T_COMPETITORS) {
+		$competitor = MyActiveRecord::FindById(T_COMPETITORS, $class_obj_id);
+		$card = getCard($competitor);
+		$cardStr = "";
+		if ($card === false) 
+		{
+			$cardStr = "{$competitor->referred_as} does not have a card";
+		} else {
+			if (validCard($card)) {
+				$cardStr = "{$competitor->referred_as}'s card is valid from {$card->validfrom} to {$card->validuntil}";
+			} else {
+				$status = strtolower($card->find_parent('cardstatus')->referred_as);
+				$cardStr = "{$competitor->referred_as}'s card has ";
+				if ($status == 'cancelled') { $cardStr .= "been "; }
+				$cardStr .= $status;
+			}
+		}
+		echo "<table class='table1'>";
+		echo "<form id='ccard' method='post' action='index.php?here=".$class_value."&mode=update_function&function=competitor_issuereplace_card&class_obj_id=".$class_obj_id."' >";
+		echo "<tr><th colspan='3'>Competitor's Card</th></tr>";
+		echo "<tr><td></td><td colspan='2'>{$cardStr}</td></tr>";
+		
+		echo "<tr><td>Valid From</td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
+
+		echo "<tr><td>Valid Until</td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
+
+		echo "<tr><td></td><td><input id='issuebtn' type='submit' name='issue' value='Issue Card' style='width:49%;' />";
+		echo "<input id='replacebtn' type='submit' name='replace' value='Replace Card' style='width:49%;' />";
+		echo "<td><input id='expirebtn' class='redText' type='submit' name='expire' value='Expire Card' /></td></tr>";
+
+		echo "</form>";
+		echo "</table>";
+
+
+		?>
+		<script>
+			document.getElementById('issuebtn').addEventListener("click", function(e) {
+				if (!confirm('Issue Card\nAre you sure you want to issue the card for this competitor?')) {
+					e.preventDefault();
+				}
+			});
+			document.getElementById('replacebtn').addEventListener("click", function(e) {
+				if (!confirm('Replace Card\nAre you sure you want to replace the card for this competitor?')) {
+					e.preventDefault();
+				}
+			});
+			document.getElementById('expirebtn').addEventListener("click", function(e) {
+				if (!confirm('Expire Card\nAre you sure you want to expire the card for this competitor?')) {
+					e.preventDefault();
+				}
+			});
+		</script>
+		<?php
 	}
 ?>

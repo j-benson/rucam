@@ -43,7 +43,8 @@
 					{
 						echo " selected ";
 					}
-					echo ">".$obj_attr_value->id." - ".$obj_attr_value->referred_as;
+					//echo ">".$obj_attr_value->id." - ".$obj_attr_value->referred_as;
+					echo ">".$obj_attr_value->referred_as ." [".$obj_attr_value->id."]";
 					
 				// Turn off this feature
 					// if (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
@@ -111,6 +112,6 @@
 		echo " selected ";
 	}
 	echo ">OR</option></select>";
-	echo "<td><input type=submit></table></form>";
+	echo "<td><input value='Search' type=submit></table></form>";
 	
 ?>

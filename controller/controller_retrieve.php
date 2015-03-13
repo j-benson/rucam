@@ -80,7 +80,7 @@
 			if ($obj_attribute=="id")
 			{
 				// PRIMARY KEYS
-				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
+				echo "<td class='idval'><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
 			}
 			else if (strlen($obj_attribute)> 2 && !(strpos($obj_attribute,"_id")===false))
 			{
@@ -90,7 +90,8 @@
 				//echo " obj_attribute = ".$obj_attribute;
 
 				// 'foreign key'. 'foreign key referred as field' 
-				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as . "</td>";			
+				//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as . "</td>";			
+				echo "<td>".$obj_value->find_parent($related_class,$obj_attribute)->referred_as . " [".$obj_value->$obj_attribute."]</td>";			
 			}
 			else
 			{
@@ -326,15 +327,15 @@
 
 			if ($obj_attribute=="id")
 			{
-				echo "<td><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
+				echo "<td class='idval'><a href=javascript:update_obj('".$current_file_name."','".$class_value."',".$obj_value->$obj_attribute.");>".$obj_value->$obj_attribute."</a></td>";
 			}
 			else if (strlen($obj_attribute)> 2 && !(strpos($obj_attribute,"_id")===false))
 			{
 				//$related_class = substr($obj_attribute, 0, -3);
 				$related_class = find_relatedclass($obj_attribute,$foreign_keys);
 				
-				//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class)->referred_as;
-				echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as."</td>";
+				//echo "<td>".$obj_value->$obj_attribute.". ".$obj_value->find_parent($related_class,$obj_attribute)->referred_as."</td>";
+				echo "<td>".$obj_value->find_parent($related_class,$obj_attribute)->referred_as . " [".$obj_value->$obj_attribute."]</td>";
 			}
 			else
 			{

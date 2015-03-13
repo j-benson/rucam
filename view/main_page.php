@@ -6,7 +6,7 @@ function redirectCreateWithErrorCheck($current_file_name, $here, $last_inserted_
 	} else {
 		echo "&post_create=".$last_inserted_record;
 	}
-	echo "'</script>";
+	echo "';</script>";
 }
 
 function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages) {
@@ -16,7 +16,7 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 	} else {
 		echo "&post_update=".$class_obj_id;
 	}
-	echo "'</script>";
+	echo "';</script>";
 }
 
 
@@ -77,6 +77,7 @@ function redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, 
 			{
 				include "controller/controller_update_functions.php";
 				redirectUpdateWithErrorCheck($current_file_name, $here, $class_obj_id, $errMessages);
+				echo "hey";
 			}
 
 			if ($mode == "confirm_search")

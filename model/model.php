@@ -10,7 +10,7 @@
 	include './include/MyActiveRecord.0.4.php';
 	
 	//in this array we list all and only those classes we like to CRUD manage from the main menu 
-	$classes = array('teams','fixtures','competitors','cards');  
+	$classes = array('venues', 'teams','fixtures','competitors','cards');  
 	
 	// in this array we list all join tables which hold many to many relationships between two given classes of objects
 	$join_tables = array('cards_fixtures');	
@@ -28,7 +28,7 @@
 	define(T_CARDS_FIXTURES, "cards_fixtures");
 	define(T_VENUES, "venues");
 	/// CARD STATUSES ///
-	define(CS_VALID, "Valid");
+	define(CS_VALID, "Active");
 	define(CS_EXPIRED, "Expired");
 	define(CS_CANCELLED, "Cancelled");
 	///
@@ -99,7 +99,8 @@
 				return "Check Out";
 			case "referred_as":
 				if ($class_name == T_COMPETITORS) return "Name";
-				if ($class_name == "teams") return "Nation";
+				if ($class_name == T_TEAMS) return "Nation";
+				if ($class_name == T_VENUES) return "Venue";
 			default:
 				return ucfirst($field);
 		}
@@ -316,11 +317,10 @@
 	}
 
 	/**
-	 * Expires a card belonging to a competitor.
-	 * @param $competitor The competitor object to find the related card and expire.
+	 * Expires a card.
+	 * @param $card The card object to expire.
 	 */
-	function expireCard($competitor) {
-		$card = getCard($competitor);
+	function expireCard($card) {
 		if ($card !== false) {
 			$card->cardstatus_id = getCardStatusId(CS_EXPIRED);
 			setCardReferredAs($card, $competitor);
@@ -402,16 +402,23 @@
 
 	function validCardDates($validfromStr, $validuntilStr, &$errMessages) {
 		$validDates = true;
-		$from = date_create($validfromStr);
-		$until = date_create($validuntilStr);
-		if ($from == false || $until == false) {
+
+		if ($validfromStr == "" || $validuntilStr == "") {
 			$validDates = false;
-			if ($from == false) { $errMessages["dateinvalid_from"] = "Valid From is an invalid date. Use format YYYY-MM-DD."; }
-			if ($until == false) { $errMessages["dateinvalid_until"] = "Valid Until is an invalid date. Use format YYYY-MM-DD."; }
+			if ($validfromStr == "") { $errMessages["invaliddate_from"] = "Valid From must be filled in."; }
+			if ($validuntilStr == "") { $errMessages["invaliddate_until"] = "Valid Until must be filled in."; }
 		} else {
-			if ($from > $until) {
+			$from = date_create($validfromStr);
+			$until = date_create($validuntilStr);
+			if ($from == false || $until == false) {
 				$validDates = false;
-				$errMessages["dateorder"] = "The Valid From date must be before the Valid Until date.";
+				if ($from == false) { $errMessages["dateinvalid_from"] = "Valid From is an invalid date. Use format YYYY-MM-DD."; }
+				if ($until == false) { $errMessages["dateinvalid_until"] = "Valid Until is an invalid date. Use format YYYY-MM-DD."; }
+			} else {
+				if ($from > $until) {
+					$validDates = false;
+					$errMessages["dateorder"] = "The Valid From date must be before the Valid Until date.";
+				}
 			}
 		}
 		return $validDates;

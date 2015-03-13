@@ -67,7 +67,7 @@
 					// Adds options to the select tag containing the values from the foreign key's referred_as field.
 					foreach ($obj_class = MyActiveRecord::FindBySql($related_class, 'SELECT * FROM '.$related_class.' WHERE id > -1 ORDER BY referred_as') as $obj_attribute => $obj_attr_value)
 					{					
-						echo "<option value='".$obj_attr_value->id."'". ($default != null && $default["id"] == $obj_attr_value->id ? " selected" : "").">".$obj_attr_value->referred_as;
+						echo "<option value='".$obj_attr_value->id."'". ($default != null && $default["id"] == $obj_attr_value->id ? " selected" : "").">".$obj_attr_value->referred_as." [".$obj_attr_value->id."]";
 						
 					//echo "(".$wcolumns_key.")";
 						
@@ -122,8 +122,8 @@
 	}
 	
 
-	echo "<tr><td colspan='2'><input type='button' value='Create New ".singularName($here, true)."' onClick=\"javascript:confirm_create('form_create');\" /><td>";
-	echo "<input type='reset'/></tr>";
+	echo "<tr><td></td><td><input type='button' value='Create New ".singularName($here, true)."' onClick=\"javascript:confirm_create('form_create');\" /></td>";
+	echo "<td><input type='reset'/></td></tr>";
 	echo "</table></form>";
 	
 ?>
