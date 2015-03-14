@@ -1,3 +1,7 @@
+<?php 
+
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -9,13 +13,13 @@
 				margin: 21px 0 9px 0;
 			}
 
-			#help-container {
+			.help-container {
 				padding: 12px;
 				top: 33px;
 				margin-bottom: 33px;
 			}
 
-			.hidden {
+			.hide {
 				display: none;
 			}
 
@@ -31,6 +35,14 @@
 			.cimg img {
 				width: 600px;
 			}
+			.sideimg {
+				width: 340px;
+			}
+			.lefttext {
+				float: left;
+				width: 600px;
+				margin-right: 26px;
+			}
 
 		</style>
 	</head>
@@ -38,16 +50,16 @@
 		<div id="main_div">
 			<h2><img src="./include/images/Logo RUCAM - Small - 2.png">RUCAM Help</h2>
 			<div id="div_menu">
-				<ul>
+				<ul id="tabs">
 					<li><a href="index.php">Return to RUCAM</a></li>
-					<li class="this_page" ><a id="basics-link" href="javascript:void(0)">Basics</a></li>
-					<li><a id="teams-link" href="javascript:void(0)">Teams</a></li>
-					<li><a id="competitors-link" href="javascript:void(0)">Competitors</a></li>
-					<li><a id="fixtures-link" href="javascript:void(0)">Fixtures</a></li>
+					<li id="basics-tab" class="this_page" ><a href="javascript:void(0)">Basics</a></li>
+					<li id="teams-tab"><a href="javascript:void(0)">Teams</a></li>
+					<li id="competitors-tab"><a href="javascript:void(0)">Competitors</a></li>
+					<li id="cards-tab"><a href="javascript:void(0)">Cards</a></li>
 				</ul>
 			</div>
-			<div id="help-container">
-				<div id="tab-basics">
+			<div id="tab-content" class="help-container" >
+				<div id="basics" class="show">
 					<p>The menu across the top shows you all that you can manage in the RUCAM system. Below shows the basics of creating, editing and searching records. Some items in this menu have more complex functionality which is described under the tabs above.</p>
 					<div class="cimg"><img src="include/images/help-menu.png" /></div>
 					<p>The system also allows you to allow cards to enter venues on a certain date for a fixture.</p>
@@ -71,22 +83,90 @@
 					<p>There are two search conditions AND and OR. AND means that all of the search fields you enter must exist in the record for it to be shown in the results. OR means that any of the search fields can exist in the record for it to be shown in the results.</p>
 					<div class="cimg"><img src="include/images/help-searchteam.png" /></div>
 				</div>
+
+				<div id="teams" class="hide">
+					<div class="lefttext">
+						<p>In the update section of a team, underneath the update form are two more forms shown here on the right. The first form is for issuing and expiring all the cards belonging to this team. The second is for giving all the cards in this team authorsation to the fixtures they are participating in.</p>
+
+						<h4>Issuing Cards</h4>
+						<p>To issue cards to all the competitors in this team the Team Member Cards form can be used. You must enter when the cards will be valid from and when they will expire, and I needn't tell you the expiry date must be after the valid from date. Clicking issue cards will then issue a card to each of the competitors belonging to this team.</p>
+
+						<h4>Expiring Cards</h4>
+						<p>To expire all the cards belonging to this teams competitors can be done with the red Expire All Cards button. It is red for a reason, once done none of the teams cards will be able to enter venues they had authorisation for.</p>
+
+						<h4>Authorisation To Venues</h4>
+						<p>The second form is for giving all the cards belonging to this team authorisation to the selected fixtures. To do this tick the boxes for the fixtures you want this team to have access to and click Add Authorisation to apply the authorisation to all the teams cards.</p>
+						<p>If you notice under the fixture name it shows you how many of the teams' cards are authorised for that fixture, also the fixtures shown in bold indicate the fixtures this team is actually playing in.</p>
+					</div>
+					<img class="sideimg" src="include/images/help-updateteamex.png" />
+					<div style="clear:both;"></div>
+				</div>
+
+				<div id="competitors" class="hide">
+					<div class="lefttext">
+						<p>In the update section of a competitor, underneath the update form is another form, Competitor's Card, shown here on the right. You will notice in the image it says that this competitor does not have a card, it is there where it will show you whether the competitor has a card or not and whether it is valid or expired.</p>
+
+						<h4>Issue Card</h4>
+						<p>Here is another place where you can issue a card to a competitor, to do this enter the valid from and valid until dates and click Issue Card.</p>
+
+						<h4>Replace Card</h4>
+						<p>So competitors are human and there will always be that one that left their card on the bus, well there is a button for this. By entering the valid from and valid until dates and clicking Replace Card the competitors old card will be cancelled, so that person who found the card on the bus cannot use it to get into the venue, and a new one will be issued copying all the authorisations from the lost one to the new one.</p>
+
+						<h4>Expire Card</h4>
+						<p>Here is another place where you can expire a compettitor's card by clicking the red Expire Card button. This will prevent this card from being used to access a venue.</p>
+					</div>
+					<img class="sideimg" src="include/images/help-updatecompetitor.png" />
+					<div style="clear:both;"></div>
+				</div>
+
+				<div id="cards" class="hide">
+					<div class="lefttext">
+						<h4>Authorising Fixtures</h4>
+						<p>When creating or updating a competitor there is another table listing the fixtures, shown on the right, this is for selecting or editing the fixtures that this card has authorisation for.</p>
+						<p>To authorise the card for a fixture, tick the box corresponding to that fixture, to remove authorisation untick that box.</p>
+					</div>
+					<img class="sideimg" src="include/images/help-createcard.png" />
+					<div style="clear:both;"></div>
+				</div>
 			</div>
 		</div>
 		<script type="text/javascript">
-			document.getElementById('teams-link').addEventListener('click', function(e) {
-				// remove class this_page
-				var menuItems = document.querySelectorAll('.div_menu li');
-				for (var i = 0; i < menuItems.length; ++i) {
-					//menuItems[i].
+			document.getElementById('basics-tab').addEventListener('click', function(e) {
+				currentTab('basics-tab');
+				showTab('basics-tab');
+			});
+			document.getElementById('teams-tab').addEventListener('click', function(e) {
+				currentTab('teams-tab');
+				showTab('teams-tab');
+			});
+			document.getElementById('competitors-tab').addEventListener('click', function(e) {
+				currentTab('competitors-tab');
+				showTab('competitors-tab');
+			});
+			document.getElementById('cards-tab').addEventListener('click', function(e) {
+				currentTab('cards-tab');
+				showTab('cards-tab');
+			});
+
+			function showTab(tabId) {
+				// hide all 
+				var content = document.querySelectorAll('#tab-content > div');
+				for (var i = 0; i < content.length; ++i) {
+					content[i].className = 'hide';
 				}
-			});
-			document.getElementById('competitors-link').addEventListener('click', function(e) {
-				
-			});
-			document.getElementById('fixtures-link').addEventListener('click', function(e) {
-				
-			});
+				// then show only the one we want
+				console.log(tabId.slice(0, tabId.lastIndexOf('-tab')));
+				document.getElementById(tabId.slice(0, tabId.lastIndexOf('-tab'))).className = "show";
+			}
+			function currentTab(id) {
+				// remove this page from all tabs
+				var tabs = document.querySelectorAll('#tabs li');
+				for (var i = 0; i < tabs.length; ++i) {
+					tabs[i].className = '';
+				}
+				// then set this page to only the one we want
+				document.getElementById(id).className = "this_page";
+			}
 		</script>
 	</body>
 </html>
