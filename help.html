@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<link rel="shortcut icon" href="include/images/Logo RUCAM - Small - 2.png" />
+		<link id="style_link" rel=StyleSheet href="include/vf1-1024x768.css" type="text/css" media=all />
+		<title>Help - RUCAM System</title>
+		<style type="text/css">
+			h4 {
+				margin: 21px 0 9px 0;
+			}
+
+			#help-container {
+				padding: 12px;
+				top: 33px;
+				margin-bottom: 33px;
+			}
+
+			.hidden {
+				display: none;
+			}
+
+			.show {
+				display: block;
+			}
+
+			.cimg {
+				width: 100%;
+				text-align: center;
+				margin:10px 0;
+			}
+			.cimg img {
+				width: 600px;
+			}
+
+		</style>
+	</head>
+	<body>
+		<div id="main_div">
+			<h2><img src="./include/images/Logo RUCAM - Small - 2.png">RUCAM Help</h2>
+			<div id="div_menu">
+				<ul>
+					<li><a href="index.php">Return to RUCAM</a></li>
+					<li class="this_page" ><a id="basics-link" href="javascript:void(0)">Basics</a></li>
+					<li><a id="teams-link" href="javascript:void(0)">Teams</a></li>
+					<li><a id="competitors-link" href="javascript:void(0)">Competitors</a></li>
+					<li><a id="fixtures-link" href="javascript:void(0)">Fixtures</a></li>
+				</ul>
+			</div>
+			<div id="help-container">
+				<div id="tab-basics">
+					<p>The menu across the top shows you all that you can manage in the RUCAM system. Below shows the basics of creating, editing and searching records. Some items in this menu have more complex functionality which is described under the tabs above.</p>
+					<div class="cimg"><img src="include/images/help-menu.png" /></div>
+					<p>The system also allows you to allow cards to enter venues on a certain date for a fixture.</p>
+					
+					<h4>Viewing Records</h4>
+					<p>By clicking on an item in the menu you will be able to view all the records for that item. You will then see another menu, such as the one below, giving you the options to create a new record or search for a particular record.</p>
+					
+					<h4>Creating Records</h4>
+					<p>By clicking on the create new button you will be shown a form, below on the right, where you will be able to enter the data to create a new record. To save the data you must click the create new button located below the form.</p>
+					<div class="cimg"><img src="include/images/help-createteam.png" /></div>
+
+					<h4>Editing Records</h4>
+					<p>To edit a record click the ID number for that record as shown below.</p>
+					<div class="cimg"><img src="include/images/help-viewteams.png" /></div>				
+					<p>All records have an update page like the one shown below. From here you can edit the record and save the changes by clicking the update button located below the form.</p>
+					<p>Some items, such as competitors, teams and fixtures, have more functions to do with the record shown below this. For more imformation on this click on the different tabs at the top of this help page.</p>
+					<div class="cimg"><img src="include/images/help-updateteam.png" /></div>
+
+					<h4>Searching Records</h4>
+					<p>By clicking on the search button you will shown a form to enter your search criteria. Clicking search will show the results in the table to the left.</p>
+					<p>There are two search conditions AND and OR. AND means that all of the search fields you enter must exist in the record for it to be shown in the results. OR means that any of the search fields can exist in the record for it to be shown in the results.</p>
+					<div class="cimg"><img src="include/images/help-searchteam.png" /></div>
+				</div>
+			</div>
+		</div>
+		<script type="text/javascript">
+			document.getElementById('teams-link').addEventListener('click', function(e) {
+				// remove class this_page
+				var menuItems = document.querySelectorAll('.div_menu li');
+				for (var i = 0; i < menuItems.length; ++i) {
+					//menuItems[i].
+				}
+			});
+			document.getElementById('competitors-link').addEventListener('click', function(e) {
+				
+			});
+			document.getElementById('fixtures-link').addEventListener('click', function(e) {
+				
+			});
+		</script>
+	</body>
+</html>

@@ -101,7 +101,7 @@
 	}
 	
 	
-	echo "<tr><td>Search condition<td><select name='search_operator'><option value='AND'";
+	echo "<tr><td>Search Condition<td><select name='search_operator'><option value='AND'";
 	if ($_REQUEST['search_operator'] == 'AND')
 	{
 		echo " selected ";
