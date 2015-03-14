@@ -3,25 +3,24 @@
 //: add a reset to system date button which will unset the 'custom_date' cookie and set system time as normal.
 //: add a validility check to the date input which will check if the date is correct
 //KNOWN errors: fix checkin and checkout to display correct dates and times
-//hours, minutes and seconds are not initilized properly when the date is custom set.
+//hours, minutes and seconds are not initilized properly when the date is custom set. 
 //the system can throw a error if the cookie is incorrectly set. you must call the method unset($_COOKIE['custom_time'])
+
+// About the hours min and sec not initialising, I removed them anyway so can use $today for comparing fixture dates which dont include the time aspect.
+
 	$fixture_selection = (isset($_POST['fixture_selection']) ? $_POST['fixture_selection'] : -1);
     if (isset($_COOKIE['custom_time'])) { //this checks if a cookie has been set
     	//gets the time from getDate
-    	$now = getDate(time());
-    	//uses a string tokenizer to get all the required info.
-    	$now['mday'] = strtok($_COOKIE['custom_time'],'/'); //first parameter is the string to be broken up.
-    	//second parameter is the delimiter for the string tokenizer to break the string at.
-    	$now['mon'] = strtok("/");
-    	$now['year'] = strtok("/"); //works like a scanner, splitting the string into seperate strings at strtok method call.
+    	$now = getDate($_COOKIE['custom_time']); // cookie holds the unix timestamp
     } else
     { //if the cookie hasn't been set, just takes the time from the system.
     	$now = getDate(time());
     }
-    $today = new DateTime("{$now['year']}-{$now['mon']}-{$now['mday']}-{$now['hours']}-{$now['minutes']}-{$now['seconds']}");
-    $formattedDate = $today->format('Y/m/d  H:i:s'); //this formats the date into a nice format.
+    $today = date_create("{$now['year']}-{$now['mon']}-{$now['mday']}");
+   
+    $formattedDate = $today->format('Y/m/d'); //this formats the date into a nice format.
 ?>
-<h2>System Date: <?echo $formattedDate; ?> <a id="setDateLink" class="subscript" href=<? echo $current_file_name."?here=&mode=set_time"?>>Set Date<img src='./include/images/cog-small.png' height=25></a></h2>
+<h2>System Date: <?echo $formattedDate; ?> <a class="subscript" href="help.html"><img src="include/images/Question-small.png" title="Help" /></a> <a id="setDateLink" class="subscript" href=<? echo $current_file_name."?here=&mode=set_time"?>>Set Date<img src='./include/images/cog-small.png' height=25></a></h2>
 <div class="cardsearch">
 <h3>
 	<form method = "POST" action="<?php echo $current_file_name; ?>?mode=view_register">
@@ -61,20 +60,49 @@
 <?php 
 if ($mode == "set_time") //SETS THE TIME
 {
-	if (isset($_POST['set_time_input']))  //checks to see if the time has been inputted.
+	// The constructer for DateTime doesn't parse DD/MM/YYYY (does parse MM/DD/YYYY though because 'murica) so changed the input to YYYY-MM-DD so can use the date
+	// picker provided by the framework. --> OK for some reason the date picker isnt working put TEMP in front of onclick to stop it running and erroring
+	// Now can call date_create (same as new DateTime but date_create returns false on fail DateTime throws an exception) to
+	// check the date entered is ok. Although as swapped the order of date strtok didnt work so used Unix timestamp as quicker.
+
+	if (isset($_POST['reset_time_input'])) {
+		// deletes the cookie so system looks at real date
+		setCookie('custom_time', '', time() - 3600); //overwrite cookie with one that expired one hour ago so browser deletes it
+		unset($_COOKIE['custom_time']); // so php can no longer access it.
+		// force refresh of page so date updates
+		header("Location: index.php");
+		//echo "<script>document.location = </script>";
+	}
+	else if (isset($_POST['set_time_input']))  //checks to see if the time has been inputted.
 	{
-		setCustomDate($_POST['set_time_input']); //calls a function which sets the cookie setCookie('custom_time', $dateString);
-		echo "<h3>System Date has been modified to: ".$_POST['set_time_input'];
+		// Check entered date before setting the cookie.
+		$datetoset = date_create($_POST['set_time_input']);
+		if ($datetoset === false) {
+			// The date is invalid.
+			echo "<h3>Invalid Date: ".$_POST['set_time_input']."</h3>";
+		} else {
+			// Setting the cookie with the Unix timestamp of the date.
+			setCustomDate($datetoset->format('U')); //calls a function which sets the cookie setCookie('custom_time', $dateString);
+			echo "<h3>System Date has been modified to: ".$_POST['set_time_input']."</h3>";
+			// force refresh of page so date updates
+			header("Location: index.php");
+		}
 	} else //if the time hasn't been inputted, it just displays a form.
 	{
-	?><h3>
-	<table>
-		<form method="POST" action="<?php echo $current_file_name; ?>?mode=set_time">
-		<tr>
-		<td>Insert Date [DD/MM/YYYY]:</td>
-		<td><input type='text' name='set_time_input'></td>
-		<td><input type='submit' value='Set'></td>
-		</tr></h3>
+	?>
+	<h3>
+		<table>
+			<form method="POST" action="<?php echo $current_file_name; ?>?mode=set_time">
+				<tr>
+				<td>Insert Date [YYYY-MM-DD]:</td>
+				<td><input id="date_picker" type='text' name='set_time_input' TEMPonclick="displayDatePicker('date_picker',false,'ymd','-');" ></td>
+				<td><input type='submit' value='Set'></td>
+				<td><input form="reset-date" type='submit' name="reset_time_input" value='Reset Date'></td>
+				</tr>
+			</form>
+			<form id="reset-date" method="post" action="<?php echo $current_file_name; ?>?mode=set_time"></form>
+		</table>
+	</h3>
 <?
 	}
 }
