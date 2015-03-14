@@ -39,9 +39,24 @@ $class_obj_id = $_REQUEST['class_obj_id'];
 			$errMessages["time"] = "The Time must be filled in.";
 		}
 		if (hasErrors($errMessages)) { $stopSave = true; }
+
+		if (!$stopSave && $this_obj->home_teams_id == $this_obj->away_teams_id) {
+			$stopSave = true;
+			$errMessages["sameteams"] = "A team cannot play itself.";
+		}
+
+		if (!$stopSave && date_create($this_obj->date) === false) {
+			$stopSave = true;
+			$errMessages["baddate"] = "Invalid date entered. Use format YYYY-MM-DD.";
+		}
 		
 		if (!$stopSave) {
 			setFixtureReferredAs($this_obj);
+		}
+
+		if (!$stopSave && existingRecord(T_FIXTURES, $this_obj)) {
+			$stopSave = true;
+			$errMessages["existing"] = "The fixture entered already exists.";
 		}
 	}
 	if ($class_obj == T_TEAMS) {

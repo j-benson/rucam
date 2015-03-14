@@ -40,8 +40,8 @@
 		{
 			if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 			{
-				echo "<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"></td>";
-				echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" ></td>";
+				echo "<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$class_obj->$wcolumns_key."' /></td>";
+				echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" /></td>";
 			}
 			elseif (strlen($wcolumns_key)> 2 && !(strpos($wcolumns_key,"_id")===false))
 			{ // FOREIGN KEYS
@@ -136,11 +136,11 @@
 		echo "<tr><th colspan='3'>Team Member Cards</th></tr>";
 		
 		echo "<tr><td>Valid From</td>";
-		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='' /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td>Valid Until</td>";
-		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='' /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td></td><td><input id='issuebtn' type='submit' value='Issue Cards' /></td>";
@@ -235,11 +235,11 @@
 		echo "<tr><td></td><td colspan='2'>{$cardStr}</td></tr>";
 		
 		echo "<tr><td>Valid From</td>";
-		echo "<td><input type='text' id='validfrom' name='validfrom' value='' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validfrom' name='validfrom' value='' /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validfrom',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td>Valid Until</td>";
-		echo "<td><input type='text' id='validuntil' name='validuntil' value='' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td>";
+		echo "<td><input type='text' id='validuntil' name='validuntil' value='' /></td>";
 		echo "<td><input type='button' value='Set Date' onclick=\"displayDatePicker('validuntil',false,'ymd','-');\" /></td></tr>";
 
 		echo "<tr><td></td><td><input id='issuebtn' type='submit' name='issue' value='Issue Card' style='width:49%;' />";
@@ -258,7 +258,7 @@
 				}
 			});
 			document.getElementById('replacebtn').addEventListener("click", function(e) {
-				if (!confirm('Replace Card\nAre you sure you want to replace the card for this competitor?')) {
+				if (!confirm('Replace Card\nAre you sure you want to replace the card for this competitor?\nThis will cancel their old card and issue a new one.\nIt will also copy any authorisations across.')) {
 					e.preventDefault();
 				}
 			});

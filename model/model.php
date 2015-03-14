@@ -382,16 +382,16 @@
 	 */
 	function existingRecord($table, $newrecord) {
 		$allrecords = MyActiveRecord::FindAll($table);
-		if (in_array($table, $join_tables)) 
-		{
-			// JOIN TABLE
-			foreach ($allrecords as $rec) {
-				if ($compareJoinRecord($newrecord, $rec)) {
-					return true;
-				}
-			}
-			return false;
-		} else {
+		// if (in_array(MyActiveRecord::Class2Table($table), $join_tables)) 
+		// {
+		// 	// JOIN TABLE
+		// 	foreach ($allrecords as $rec) {
+		// 		if ($compareJoinRecord($newrecord, $rec)) {
+		// 			return true;
+		// 		}
+		// 	}
+		// 	return false;
+		// } else {
 			// OTHER TABLES
 			foreach ($allrecords as $r) {
 				if (compareRecord($newrecord, $r)) {
@@ -399,7 +399,7 @@
 				}
 			}
 			return false;
-		}
+		// }
 	}
 
 	function validCardDates($validfromStr, $validuntilStr, &$errMessages) {

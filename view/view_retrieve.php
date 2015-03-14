@@ -21,8 +21,8 @@
 		if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 		{
 			// For date data types show date picker button
-			echo "<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"/></td>";
-			echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"/></td>";
+			echo "<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='".$_REQUEST['input_'.$wcolumns_key]."' /></td>";
+			echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" /></td>";
 				
 				//echo "<tr id='arow'><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'>";
 				//echo "<tr><td>".$wcolumns_key."<td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' datepicker='true' datepicker_format='DD/MM/YYYY'><td><div id='aaa'>&nbsp;</div><script>var b = new free_date_picker('b', 'aaa', 'input_".$wcolumns_key."', 1, true, 'en');</script>";

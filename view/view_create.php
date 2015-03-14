@@ -38,7 +38,7 @@
 		{
 			if(MyActiveRecord::GetType($class_obj,$wcolumns_key) == 'date')
 			{
-				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\"></td>";
+				echo "<tr><td>".niceName($here, $wcolumns_key)."</td><td><input type=text id='input_".$wcolumns_key."' name='input_".$wcolumns_key."' value='' /></td>";
 				echo "<td><input type=button value='Set Date' onclick=\"displayDatePicker('input_".$wcolumns_key."',false,'ymd','-');\" /></td>";
 			}
 			else
