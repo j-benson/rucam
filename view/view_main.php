@@ -9,14 +9,16 @@
 // About the hours min and sec not initialising, I removed them anyway so can use $today for comparing fixture dates which dont include the time aspect.
 
 	$fixture_selection = (isset($_POST['fixture_selection']) ? $_POST['fixture_selection'] : -1);
+	$now = getdate(time()); // infomation about the real time
     if (isset($_COOKIE['custom_time'])) { //this checks if a cookie has been set
     	//gets the time from getDate
-    	$now = getDate($_COOKIE['custom_time']); // cookie holds the unix timestamp
+    	$todayinfo = getDate($_COOKIE['custom_time']); // cookie holds the unix timestamp
     } else
     { //if the cookie hasn't been set, just takes the time from the system.
-    	$now = getDate(time());
+    	$todayinfo = getDate(time());
     }
-    $today = date_create("{$now['year']}-{$now['mon']}-{$now['mday']}");
+    $today = date_create("{$todayinfo['year']}-{$todayinfo['mon']}-{$todayinfo['mday']}"); // today with just the (simulated)date as need this to compare with fixture date
+    $todaytime = date_create("{$todayinfo['year']}-{$todayinfo['mon']}-{$todayinfo['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}"); // today with the (simulated)date and (real)time for the logs
    
     $formattedDate = $today->format('Y/m/d'); //this formats the date into a nice format.
 ?>
@@ -150,13 +152,13 @@ if ($mode == "request_access")
 		    			$auth = MyActiveRecord::FindFirst(T_CARDS_FIXTURES, "fixtures_id=".$f->id." AND cards_id=".$req_card->id);
 
 		    			if ($auth->checkin == null) {
-					    	// set check in time
-					    	$auth->checkin = "{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
+					    	// set check in timestamp
+					    	$auth->checkin = $todaytime->format("Y-m-d H:i:s"); //"{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
 					    	$auth->save();
 					        echo $granted;
 					       	echo "{$req_card->referred_as} checked in at {$auth->checkin}";
 					    } else {
-					    	$auth->checkout = "{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
+					    	$auth->checkout = $todaytime->format("Y-m-d H:i:s"); //"{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
 					    	$auth->save();
 					       	echo "{$req_card->referred_as} checked out at {$auth->checkout}";
 					    }
