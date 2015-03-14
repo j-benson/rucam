@@ -9,10 +9,15 @@
 <script src="include/vf1.js"></script>
 <script type="text/javascript" src="include/calendar.js"></script>
 <title><? echo $application_title; ?></title>
-
 <body>
 <div id="main_div">
-<h2><img src="./include/images/Logo RUCAM - Small - 2.png"><? echo $application_title; ?></h2>
+<h2><img src="./include/images/Logo RUCAM - Small - 2.png"><? echo $application_title; ?>
+<!--RUGBY UNION LOGOS-->
+<img src="./include/images/RUG_aru_logo.png" height=35 align="right">
+<img src="./include/images/RUG_fru_logo.png" height=35 align="right">
+<img src="./include/images/RUG_rfu_logo.png" height=35 align="right">
+<img src="./include/images/RUG_uru_logo.png" height=35 align="right">
+<img src="./include/images/RUG_wru_logo.png" height=35 align="right"> </h2>
 <?php
 	function ReturnName()
 	{
