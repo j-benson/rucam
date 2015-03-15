@@ -412,3 +412,8 @@ input[readonly='true']
 	float:right;
 }
 
+.cardsearch,
+.cardsearch input,
+.cardsearch select {
+	font-size: 16px;
+}

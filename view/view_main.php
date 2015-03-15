@@ -31,6 +31,7 @@
 <h2>System Date: <? echo $formattedDate; ?> <a class="subscript" href="help.html"><img src="include/images/Question-small.png" title="Help" /></a> <a id="setDateLink" class="subscript" href=<? echo $current_file_name."?here=&mode=set_time"?>>Set Date<img src='./include/images/cog-small.png' height=25></a></h2>
 <div class="cardsearch">
 <h3>
+	<div style="float:left;">
 	<form id="select_venue" method = "POST" action="<?php echo $current_file_name; ?>?mode=view_register">
 		<select id='selected_venue' name='selected_venue'>
 			<?php $venues = MyActiveRecord::FindAll(T_VENUES); 
@@ -40,24 +41,28 @@
 			} ?>
 		</select>
 		<input type='submit' value='View Register'>
-		<input type='submit' value='View Logs'>
+		<!-- <input type='submit' value='View Logs'> -->
 	</form>
 	<script type="text/javascript">
 		document.getElementById('selected_venue').addEventListener("change", function(e) {
 			document.getElementById('select_venue').submit();
 		});
 	</script>
+	</div>
 	<?php if ($selected_venue > 0) {  // REMOVE IF, IF WANT TO ALWAYS SHOW ?>
-		<table>
-			<form method="POST" action="<?php echo $current_file_name; ?>?mode=request_access">
-				<tr>
-					<td>Enter Card ID:</td>
-					<td><input type='text' name='card_id'></td>
-					<td><input type='submit' value='Access'></td>
-				</tr>
-			</form>
-		</table>
+		<div style="float:right;">
+			<table>
+				<form method="POST" action="<?php echo $current_file_name; ?>?mode=request_access">
+					<tr>
+						<td>Enter Card ID:</td>
+						<td><input type='text' name='card_id'></td>
+						<td><input type='submit' value='Access'></td>
+					</tr>
+				</form>
+			</table>
+		</div>
 	<?php } ?>
+	<div style="clear:both;"></div>
 </div>
 <?php if ($selected_venue == 0) { ?>
 	<div class="main_img">
