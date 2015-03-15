@@ -1,19 +1,25 @@
 <?php
-//TODO: add a checkout button or add functioanlity to access button to check if checked in.
-//: add a reset to system date button which will unset the 'custom_date' cookie and set system time as normal.
-//: add a validility check to the date input which will check if the date is correct
 //KNOWN errors: fix checkin and checkout to display correct dates and times
-//hours, minutes and seconds are not initilized properly when the date is custom set. 
-//the system can throw a error if the cookie is incorrectly set. you must call the method unset($_COOKIE['custom_time'])
 
 // About the hours min and sec not initialising, I removed them anyway so can use $today for comparing fixture dates which dont include the time aspect.
 
+
 	$fixture_selection = (isset($_POST['fixture_selection']) ? $_POST['fixture_selection'] : -1);
+	if (isset($_POST['selected_venue'])) {
+		$selected_venue = $_POST['selected_venue'];
+		setcookie('selected_venue', $selected_venue); // for persistance so the same register is shown.. maybe if I do this
+	} else if (isset($_COOKIE['selected_venue'])) {
+		$selected_venue = $_COOKIE['selected_venue'];
+	} else {
+		$selected_venue = 0;
+	}
+
 	$now = getdate(time()); // infomation about the real time
     if (isset($_COOKIE['custom_time'])) { //this checks if a cookie has been set
     	//gets the time from getDate
     	$todayinfo = getDate($_COOKIE['custom_time']); // cookie holds the unix timestamp
-    } else
+    }
+    else
     { //if the cookie hasn't been set, just takes the time from the system.
     	$todayinfo = getDate(time());
     }
@@ -22,38 +28,38 @@
    
     $formattedDate = $today->format('Y/m/d'); //this formats the date into a nice format.
 ?>
-<h2>System Date: <?echo $formattedDate; ?> <a class="subscript" href="help.html"><img src="include/images/Question-small.png" title="Help" /></a> <a id="setDateLink" class="subscript" href=<? echo $current_file_name."?here=&mode=set_time"?>>Set Date<img src='./include/images/cog-small.png' height=25></a></h2>
+<h2>System Date: <? echo $formattedDate; ?> <a class="subscript" href="help.html"><img src="include/images/Question-small.png" title="Help" /></a> <a id="setDateLink" class="subscript" href=<? echo $current_file_name."?here=&mode=set_time"?>>Set Date<img src='./include/images/cog-small.png' height=25></a></h2>
 <div class="cardsearch">
 <h3>
-	<form method = "POST" action="<?php echo $current_file_name; ?>?mode=view_register">
-	<select name='fixture_selection'>
-	<?
-	$fixtures = MyActiveRecord::FindAll(T_FIXTURES, null, "date, time");
-	if ($fixtures === false)
-	{
-		echo "<option>No Fixtures</option>";
-	} else {
-		foreach($fixtures as $fix) {
-			echo "<option ".($fixture_selection == $fix->id ? "selected " : "")."value = '".$fix->id."'>".$fix->referred_as."</option>";	
-		}
-	}
-	?>
-	</select>
-	<input type='submit' value='View Register'>
-	<input type='submit' value='View Logs'>
+	<form id="select_venue" method = "POST" action="<?php echo $current_file_name; ?>?mode=view_register">
+		<select id='selected_venue' name='selected_venue'>
+			<?php $venues = MyActiveRecord::FindAll(T_VENUES); 
+			echo "<option value='0'>Select a Venue</option>";
+			foreach ($venues as $v) {
+				echo "<option ".($v->id == $selected_venue ? "selected " : "")."value='{$v->id}'>{$v->referred_as} ({$v->town})</option>";
+			} ?>
+		</select>
+		<input type='submit' value='View Register'>
+		<input type='submit' value='View Logs'>
 	</form>
-
-	<table>
-		<form method="POST" action="<?php echo $current_file_name; ?>?mode=request_access">
-			<tr>
-				<td>Insert Card ID:</td>
-				<td><input type='text' name='card_id'></td>
-				<td><input type='submit' value='Access'></td>
-			</tr>
-		</form>
-	</table>
+	<script type="text/javascript">
+		document.getElementById('selected_venue').addEventListener("change", function(e) {
+			document.getElementById('select_venue').submit();
+		});
+	</script>
+	<?php if ($selected_venue > 0) {  // REMOVE IF, IF WANT TO ALWAYS SHOW ?>
+		<table>
+			<form method="POST" action="<?php echo $current_file_name; ?>?mode=request_access">
+				<tr>
+					<td>Enter Card ID:</td>
+					<td><input type='text' name='card_id'></td>
+					<td><input type='submit' value='Access'></td>
+				</tr>
+			</form>
+		</table>
+	<?php } ?>
 </div>
-<?php if ($mode == "") { ?>
+<?php if ($selected_venue == 0) { ?>
 	<div class="main_img">
 		<img src="include/images/Logo RUCAM.png" />
 	</div>
@@ -89,9 +95,9 @@ if ($mode == "set_time") //SETS THE TIME
 			// force refresh of page so date updates
 			header("Location: index.php");
 		}
-	} else //if the time hasn't been inputted, it just displays a form.
-	{
-	?>
+	} 
+	else //if the time hasn't been inputted, it just displays a form.
+	{ ?>
 	<h3>
 		<table>
 			<form method="POST" action="<?php echo $current_file_name; ?>?mode=set_time">
@@ -105,80 +111,134 @@ if ($mode == "set_time") //SETS THE TIME
 			<form id="reset-date" method="post" action="<?php echo $current_file_name; ?>?mode=set_time"></form>
 		</table>
 	</h3>
-<?
-	}
-}
-if ($mode == "view_register")
-{
-    $currentFixture = MyActiveRecord::FindById('fixtures', $fixture_selection);
-    if ($currentFixture === false) {
-        echo "<h1>No fixture information could be found.</h1>";
-    }else {
-        $authorisations = MyActiveRecord::FindAll(T_CARDS_FIXTURES,"fixtures_id=".$currentFixture->id);
-        echo "<h2>Showing register for: ".$currentFixture->referred_as."</h2>";
-        echo "<table class=table1>";
-        echo "<tr><th>Card ID</th><th>Check In</th><th>Check Out</th></tr>";
-        foreach ($authorisations as $auth)
-        {
-            $card = $auth->find_parent(T_CARDS);
-            echo "<tr><td>".$auth->cards_id." (".$card->referred_as.")</td><td>".$auth->checkin."</td><td>".$auth->checkout."</td></tr>";
-        }
-        echo "</table>";
-    }
+	<? }
 }
 if ($mode == "request_access")
 {
-	$granted = "<h3 class='greenText'>Access Granted</h3>";
-	$denied = "<h3 class='redText'>Access Denied</h3>";
+	$granted = "<h3 class='greenText'>Access Granted - ";
+	$denied = "<h3 class='redText'>Access Denied - ";
+	$closeh = "</h3>";
 
     $req_card = MyActiveRecord::FindById(T_CARDS, $_POST['card_id']);
     if ($req_card === false || $currentFixture == -1) {
-		echo $denied;
-    	echo "<p>Invalid card.</p>";
+		echo $denied."Invalid card.".$closeh;
     } else {
     	if(validCard($req_card)) {
+    		$venue = MyActiveRecord::FindById(T_VENUES, $selected_venue);
+    		// Only check fixtures for the selected venue
 	    	$linkedFixtures = $req_card->find_linked(T_FIXTURES); //empty array if none
 	    	if (count($linkedFixtures) == 0) {
-	    		echo $denied;
-		    	echo "<p>Not authorised for any of todays fixtures: {$req_card->referred_as}</p>";
+	    		echo $denied."Not authorised for any of todays fixtures at {$venue->referred_as}: {$req_card->referred_as}".$closeh;
 	    	} else {
 	    		$found = 0;
 		    	foreach ($linkedFixtures as $f) {
 		    		// is one of these fxtures today?
 		    		//In order to test the system, this part 
-		    		if (date_create($f->date) == $today) {
-		    			// This fixture is today
+		    		if (date_create($f->date) == $today && $f->venues_id == $selected_venue) {
+		    			// This fixture is today at the selected venue.
+		    			// REMOVE && $f->venues_id == $selected_venue IF WE WANT CARD TO SCAN IN FOR ANY FIXTURE
 		    			++$found;
-		    			$auth = MyActiveRecord::FindFirst(T_CARDS_FIXTURES, "fixtures_id=".$f->id." AND cards_id=".$req_card->id);
+		    			$access = MyActiveRecord::FindFirst(T_ACCESS, "venues_id=".$f->venues_id." AND cards_id=".$req_card->id, "id DESC");
 
-		    			if ($auth->checkin == null) {
-					    	// set check in timestamp
-					    	$auth->checkin = $todaytime->format("Y-m-d H:i:s"); //"{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
-					    	$auth->save();
-					        echo $granted;
-					       	echo "{$req_card->referred_as} checked in at {$auth->checkin}";
-					    } else {
-					    	$auth->checkout = $todaytime->format("Y-m-d H:i:s"); //"{$now['year']}-{$now['mon']}-{$now['mday']} {$now['hours']}:{$now['minutes']}:{$now['seconds']}";
-					    	$auth->save();
-					       	echo "{$req_card->referred_as} checked out at {$auth->checkout}";
-					    }
+			    		// Create new entry when 
+			    		//  - No previous entry
+			    		//  - Previous entry was checked out
+			    		// Update entry when 
+			    		//  - Previous entry was not checked out
+		    			if ($access === false || $access->checkout != D_DATE) {
+		    				$access = MyActiveRecord::Create(T_ACCESS);
+		    				$access->cards_id = $req_card->id;
+		    				$access->venues_id = $selected_venue;
+		    				$access->checkin = $todaytime->format("Y-m-d H:i:s");
+		    				$access->checkout = D_DATE; // as myactiverecord cant seem to set null values have to use a default timestamp to indicate empty
+		    				echo $granted."{$req_card->referred_as} checked in at {$access->checkin}".$closeh;
+		    			} else {
+		    				$access->checkout = $todaytime->format("Y-m-d H:i:s");
+		    				echo "<h3 class='greenText'>{$req_card->referred_as} checked out at {$access->checkout}".$closeh;
+		    			}
+		    			$access->save();
 		    		}
 		    	}
 		    	if ($found == 0) {
-		    		echo $denied;
-		    		echo "<p class='redText'>Not authorised for any of todays fixtures: {$req_card->referred_as}</p>";
+		    		echo $denied."Not authorised for any of todays fixtures at {$venue->referred_as}: {$req_card->referred_as}".$closeh;
 		    	}
 		    }
 		} else {
-			echo $denied;
-			echo "<p>Card not valid: {$req_card->referred_as}</p>";
+			echo $denied."Card not valid: {$req_card->referred_as}".$closeh;
 		}	    
     }
+}
+if ($selected_venue > 0)
+{ // VIEW REGISTER //
+	// The register shows two things, those who are allowed to be on site and
+	// those who are actuallly on site.
+	// Need to find fixtures that are at this venue today
+	// Then look at what cards are linked to that fixture.
+	// Look for those cards in the access logs
+	// List those cards that are onsite (those checked in but not out)
+	// List those cards that are Authorised onsite (all).
+	$venue = MyActiveRecord::FindById(T_VENUES, $selected_venue);
+	$fixtures = MyActiveRecord::FindAll(T_FIXTURES, "venues_id=".$venue->id." AND date='".$today->format("Y-m-d")."'", "time");
+	$cardIds = array();
+	$cards = array();
+	foreach ($fixtures as $f) {
+		// As there could be more than one fixture in a day
+		$fcards = $f->find_linked(T_CARDS);
+		// These arrays will show duplicates if same person/team plays twice. or more.
+		$cards = array_merge($cards, $fcards);
+		foreach ($fcards as $c) {
+			array_push($cardIds, $c->id);
+		}
+	}
+	
+	if (count($cardIds) > 0) {
+		$access = MyActiveRecord::FindAll(T_ACCESS, "venues_id=".$venue->id." AND cards_id IN (".implode(",", $cardIds).")");
+	} else {
+		$access = array();
+	}
+	echo "<h2>Showing register for: ".$venue->referred_as." (".$venue->town.")</h2>";
+	?>
+	<div style="margin: 10px auto 0 auto; width: 870px;">
+		<div style="float:left; width:40%; margin-right:15px;">
+			<table class="table1">
+				<tr><th>Authorised Onsite Today</th></tr>
+				<?php foreach ($cards as $c) {
+					echo "<tr><td>{$c->referred_as}</td></tr>";
+				} ?>
+			</table>
+		</div>
+		<div style="float:left; width:56%; margin-left:15px;">
+			<table class="table1">
+				<tr><th>Currently Onsite</th><th>Time Entered</th></tr>
+				<?php foreach ($access as $a) {
+					if ($a->checkout == D_DATE) {
+						echo "<tr><td>".$a->find_parent(T_CARDS)->referred_as."</td><td>{$a->checkin}</td></tr>";
+					}
+				} ?>
+			</table>
+		</div>
+		<div style="clear:both;"></div>
+	</div>
+	<?php
+    // $currentFixture = MyActiveRecord::FindById('fixtures', $fixture_selection);
+    // if ($currentFixture === false) {
+    //     echo "<h1>No fixture information could be found.</h1>";
+    // }else {
+    //     $authorisations = MyActiveRecord::FindAll(T_CARDS_FIXTURES,"fixtures_id=".$currentFixture->id);
+    //     echo "<h2>Showing register for: ".$currentFixture->referred_as."</h2>";
+    //     echo "<table class=table1>";
+    //     echo "<tr><th>Card ID</th><th>Check In</th><th>Check Out</th></tr>";
+    //     foreach ($authorisations as $auth)
+    //     {
+    //         $card = $auth->find_parent(T_CARDS);
+    //         // Now need to get infomation from the access
+    //         echo "<tr><td>[".$auth->cards_id."] ".$card->referred_as."</td><td>".$auth->checkin."</td><td>".$auth->checkout."</td></tr>";
+    //     }
+    //     echo "</table>";
+    // }
 }
 
 function setCustomDate($dateString)
 {
 	setCookie('custom_time', $dateString);
 }
-
-?>

@@ -31,7 +31,7 @@ if ($here == "") {
 	include "controller/controller_retrieve.php";
 	echo "</div>"; // closes div2 from menu.php
 	
-	if ($mode == "search")
+	if ($mode == "search" || $mode == "confirm_search")
 	{
 		echo "<div id='div_right'>";
 		//echo "<script>document.getElementById('div2').style.width = '60%';</script>";

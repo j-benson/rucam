@@ -397,8 +397,8 @@ input[readonly='true']
 	}
 
 .redText {
-	color: red;
-	border-color:red;
+	color: #B20000;
+	border-color: #B20000;
 }
 
 .greenText {

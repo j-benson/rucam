@@ -96,7 +96,12 @@
 			else
 			{
 				// DATA
-				echo "<td>".$obj_value->$obj_attribute."</td>";
+				if(MyActiveRecord::GetType($class_value,$obj_attribute) == 'datetime' && $obj_value->$obj_attribute == D_DATE) {
+					// Don't show datetimes that are 0000-00-00 00:00:00 
+					echo "<td></td>";
+				} else {
+					echo "<td>".$obj_value->$obj_attribute."</td>";
+				}
 			}
 		} // end foreach of result row
 
@@ -339,7 +344,13 @@
 			}
 			else
 			{
-				echo "<td>".$obj_value->$obj_attribute."</td>";
+				// DATA //
+				if(MyActiveRecord::GetType($class_value,$obj_attribute) == 'datetime' && $obj_value->$obj_attribute == D_DATE) {
+					// Don't show datetimes that are 0000-00-00 00:00:00 
+					echo "<td></td>";
+				} else {
+					echo "<td>".$obj_value->$obj_attribute."</td>";
+				}
 			}
 		}
 		

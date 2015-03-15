@@ -32,7 +32,8 @@
 	define(CS_VALID, "Active");
 	define(CS_EXPIRED, "Expired");
 	define(CS_CANCELLED, "Cancelled");
-	///
+	/// DEFAULTS ///
+	define(D_DATE, "0000-00-00 00:00:00"); //because myactiverecord and null values dont get along.
 
 	$messages = array();
 	$errMessages = array();
@@ -103,9 +104,9 @@
 			case "validuntil":
 				return "Valid Until";
 			case "checkin":
-				return "Check In";
+				return "Time Entered";
 			case "checkout":
-				return "Check Out";
+				return "Time Left";
 			case "referred_as":
 				if ($class_name == T_COMPETITORS) return "Name";
 				if ($class_name == T_TEAMS) return "Nation";
