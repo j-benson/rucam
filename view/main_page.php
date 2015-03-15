@@ -24,6 +24,21 @@ if ($here == "") {
 	/// MAIN PAGE ///
 	include "view/view_main.php";
 
+} else if ($here == "access") {
+	// This access table will be viewable and searchable but not editable directly from here.
+	
+	$class_value = $here;
+	include "controller/controller_retrieve.php";
+	echo "</div>"; // closes div2 from menu.php
+	
+	if ($mode == "search")
+	{
+		echo "<div id='div_right'>";
+		//echo "<script>document.getElementById('div2').style.width = '60%';</script>";
+		echo "<script>display_div_right();</script>"; 
+		include "view_retrieve.php";
+		echo "</div>";
+	}
 } else {
 	foreach ($classes as $class_key => $class_value)
 	{

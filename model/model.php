@@ -10,7 +10,7 @@
 	include './include/MyActiveRecord.0.4.php';
 	
 	//in this array we list all and only those classes we like to CRUD manage from the main menu 
-	$classes = array('venues', 'teams','fixtures','competitors','cards');  
+	$classes = array('access', 'venues', 'teams','fixtures','competitors','cards');  
 	
 	// in this array we list all join tables which hold many to many relationships between two given classes of objects
 	$join_tables = array('cards_fixtures');	
@@ -27,6 +27,7 @@
 	define(T_CARDSTATUS, "cardstatus");
 	define(T_CARDS_FIXTURES, "cards_fixtures");
 	define(T_VENUES, "venues");
+	define(T_ACCESS, "access");
 	/// CARD STATUSES ///
 	define(CS_VALID, "Active");
 	define(CS_EXPIRED, "Expired");
@@ -69,6 +70,14 @@
 			return "Away Team";
 		}
 		else if ($class_name == T_FIXTURES && $foreign_key == 'venues_id')
+		{
+			return "Venue";
+		}
+		else if ($class_name == T_ACCESS && $foreign_key == 'cards_id')
+		{
+			return "Card";
+		}
+		else if ($class_name == T_ACCESS && $foreign_key == 'venues_id')
 		{
 			return "Venue";
 		}
@@ -198,6 +207,11 @@
 	}
 		
 	class cardstatus extends MyActiveRecord{
+		function destroy(){
+		}	
+	}
+
+	class access extends MyActiveRecord{
 		function destroy(){
 		}	
 	}

@@ -29,6 +29,19 @@ CREATE TABLE IF NOT EXISTS `cards_fixtures` (
   `id` int(11) NOT NULL auto_increment,
   `cards_id` int(11) NOT NULL,
   `fixtures_id` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `access` 
+--
+
+CREATE TABLE IF NOT EXISTS `access` (
+  `id` int(11) NOT NULL auto_increment,
+  `cards_id` int(11) NOT NULL,
+  `venues_id` int(11) NOT NULL,
   `checkin` datetime default NULL,
   `checkout` datetime default NULL,
   PRIMARY KEY  (`id`)
