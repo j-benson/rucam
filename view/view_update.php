@@ -149,7 +149,7 @@
 		echo "</form>";
 		echo "</table>";
 
-		echo "<form id='team_expire_cards' method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_expire_cards&class_obj_id=".$class_obj_id."' ></form>";
+		echo "<form id='team_expire_cards' method='post' action='index.php?here=".$class_value."&mode=update_function&function=team_expire_cards&class_obj_id=".$class_obj_id."' style='display:none;'></form>";
 
 		/// WHOLE TEAM AUTHORISATION ///
 		$numCompetitors = count($competitors);

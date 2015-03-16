@@ -132,42 +132,39 @@ if ($mode == "request_access")
     		$venue = MyActiveRecord::FindById(T_VENUES, $selected_venue);
     		// Only check fixtures for the selected venue
 	    	$linkedFixtures = $req_card->find_linked(T_FIXTURES); //empty array if none
-	    	if (count($linkedFixtures) == 0) {
-	    		echo $denied."Not authorised for any of todays fixtures at {$venue->referred_as}: {$req_card->referred_as}".$closeh;
-	    	} else {
-	    		$found = 0;
-		    	foreach ($linkedFixtures as $f) {
-		    		// is one of these fxtures today?
-		    		//In order to test the system, this part 
-		    		if (date_create($f->date) == $today && $f->venues_id == $selected_venue) {
-		    			// This fixture is today at the selected venue.
-		    			// REMOVE && $f->venues_id == $selected_venue IF WE WANT CARD TO SCAN IN FOR ANY FIXTURE
-		    			++$found;
-		    			$access = MyActiveRecord::FindFirst(T_ACCESS, "venues_id=".$f->venues_id." AND cards_id=".$req_card->id, "id DESC");
+	    	
+    		$found = 0;
+	    	foreach ($linkedFixtures as $f) {
+	    		// is one of these fxtures today?
+	    		//In order to test the system, this part 
+	    		if (date_create($f->date) == $today && $f->venues_id == $selected_venue) {
+	    			// This fixture is today at the selected venue.
+	    			// REMOVE && $f->venues_id == $selected_venue IF WE WANT CARD TO SCAN IN FOR ANY FIXTURE
+	    			++$found;
+	    			$access = MyActiveRecord::FindFirst(T_ACCESS, "venues_id=".$f->venues_id." AND cards_id=".$req_card->id, "id DESC");
 
-			    		// Create new entry when 
-			    		//  - No previous entry
-			    		//  - Previous entry was checked out
-			    		// Update entry when 
-			    		//  - Previous entry was not checked out
-		    			if ($access === false || $access->checkout != D_DATE) {
-		    				$access = MyActiveRecord::Create(T_ACCESS);
-		    				$access->cards_id = $req_card->id;
-		    				$access->venues_id = $selected_venue;
-		    				$access->checkin = $todaytime->format("Y-m-d H:i:s");
-		    				$access->checkout = D_DATE; // as myactiverecord cant seem to set null values have to use a default timestamp to indicate empty
-		    				echo $granted."{$req_card->referred_as} checked in at {$access->checkin}".$closeh;
-		    			} else {
-		    				$access->checkout = $todaytime->format("Y-m-d H:i:s");
-		    				echo "<h3 class='greenText'>{$req_card->referred_as} checked out at {$access->checkout}".$closeh;
-		    			}
-		    			$access->save();
-		    		}
-		    	}
-		    	if ($found == 0) {
-		    		echo $denied."Not authorised for any of todays fixtures at {$venue->referred_as}: {$req_card->referred_as}".$closeh;
-		    	}
-		    }
+		    		// Create new entry when 
+		    		//  - No previous entry
+		    		//  - Previous entry was checked out
+		    		// Update entry when 
+		    		//  - Previous entry was not checked out
+	    			if ($access === false || $access->checkout != D_DATE) {
+	    				$access = MyActiveRecord::Create(T_ACCESS);
+	    				$access->cards_id = $req_card->id;
+	    				$access->venues_id = $selected_venue;
+	    				$access->checkin = $todaytime->format("Y-m-d H:i:s");
+	    				$access->checkout = D_DATE; // as myactiverecord cant seem to set null values have to use a default timestamp to indicate empty
+	    				echo $granted."{$req_card->referred_as} checked in at {$access->checkin}".$closeh;
+	    			} else {
+	    				$access->checkout = $todaytime->format("Y-m-d H:i:s");
+	    				echo "<h3 class='greenText'>{$req_card->referred_as} checked out at {$access->checkout}".$closeh;
+	    			}
+	    			$access->save();
+	    		}
+	    	}
+	    	if (count($linkedFixtures) == 0 || $found == 0) {
+	    		echo $denied."Not authorised to enter {$venue->referred_as} on ".$today->format("Y-m-d").": {$req_card->referred_as}".$closeh;
+	    	}
 		} else {
 			echo $denied."Card not valid: {$req_card->referred_as}".$closeh;
 		}	    
@@ -208,7 +205,7 @@ if ($selected_venue > 0)
 			<table class="table1">
 				<tr><th>Authorised Onsite Today</th></tr>
 				<?php foreach ($cards as $c) {
-					echo "<tr><td>{$c->referred_as}</td></tr>";
+					echo "<tr><td>Card:{$c->id} - {$c->referred_as}</td></tr>";
 				} ?>
 			</table>
 		</div>
@@ -217,7 +214,8 @@ if ($selected_venue > 0)
 				<tr><th>Currently Onsite</th><th>Time Entered</th></tr>
 				<?php foreach ($access as $a) {
 					if ($a->checkout == D_DATE) {
-						echo "<tr><td>".$a->find_parent(T_CARDS)->referred_as."</td><td>{$a->checkin}</td></tr>";
+						$c = $a->find_parent(T_CARDS);
+						echo "<tr><td>Card:{$c->id} - {$c->referred_as}</td><td>{$a->checkin}</td></tr>";
 					}
 				} ?>
 			</table>

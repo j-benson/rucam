@@ -53,6 +53,7 @@
 				<ul id="tabs">
 					<li><a href="index.php">Return to RUCAM</a></li>
 					<li id="basics-tab" class="this_page" ><a href="javascript:void(0)">Basics</a></li>
+					<li id="venue-access-tab" ><a href="javascript:void(0)">Venue Access</a></li>
 					<li id="teams-tab"><a href="javascript:void(0)">Teams</a></li>
 					<li id="competitors-tab"><a href="javascript:void(0)">Competitors</a></li>
 					<li id="cards-tab"><a href="javascript:void(0)">Cards</a></li>
@@ -82,6 +83,29 @@
 					<p>By clicking on the search button you will shown a form to enter your search criteria. Clicking search will show the results in the table to the left.</p>
 					<p>There are two search conditions AND and OR. AND means that all of the search fields you enter must exist in the record for it to be shown in the results. OR means that any of the search fields can exist in the record for it to be shown in the results.</p>
 					<div class="cimg"><img src="include/images/help-searchteam.png" /></div>
+				</div>
+
+				<div id="venue-access" class="hide">
+					<p>This where you can view a venue's information about who is on site at a particular time and who is allowed to enter the venue on that day. Using the dropdown menu shown below you can select which venue to show, this selection will be remembered until you change it.</p>
+					<div class="cimg"><img src="include/images/help-mainwmenu.png" /></div>
+					<h4>Venue Register</h4>
+					<p>You will now see two tables, the one on the left shows those who are allowed to enter the selected venue, the one on the right shows those who have entered the venue and are currently onsite.</p>
+					<div class="cimg"><img src="include/images/help-twick.png" /></div>
+					<h4>Arriving Competitors</h4>
+					<p>When you have selected a venue you will see a card ID box on the right, this is where you enter the card ID to check each competitor as they enter and leave the selected premises. It will check whether the competitor has authorisation to enter and log their entry time. They will then be placed on the register of people on site.</p>
+					<p>This is to be replaced by the card readers that will automate this process.</p>
+					<div class="cimg"><img src="include/images/help-twickc3g.png" /></div>
+					<h4>Leaving Competitors</h4>
+					<p>When a competitor leaves the venue their exit time will be logged and they will be removed from the register.</p>
+					<div class="cimg"><img src="include/images/help-twickc1out.png" /></div>
+					<h4>Preventing Access</h4>
+					<p>Competitors that do not have a fixture at the venue on that day will not be allowed to enter.</p>
+					<div class="cimg"><img src="include/images/help-twickc6na.png" /></div>
+					<p>Competitors that do not have a valid card will also not be allowed to enter.</p>
+					<div class="cimg"><img src="include/images/help-twickc5ex.png" /></div>
+					<h4>Access Logs</h4>
+					<p>Under the Access tab you are able to view and search all the entry and exit logs across all the venues.</p>
+					<div class="cimg"><img src="include/images/help-access.png" /></div>
 				</div>
 
 				<div id="teams" class="hide">
@@ -134,6 +158,10 @@
 			document.getElementById('basics-tab').addEventListener('click', function(e) {
 				currentTab('basics-tab');
 				showTab('basics-tab');
+			});
+			document.getElementById('venue-access-tab').addEventListener('click', function(e) {
+				currentTab('venue-access-tab');
+				showTab('venue-access-tab');
 			});
 			document.getElementById('teams-tab').addEventListener('click', function(e) {
 				currentTab('teams-tab');
